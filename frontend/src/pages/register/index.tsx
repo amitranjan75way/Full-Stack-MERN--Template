@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -15,7 +15,7 @@ type FormData = {
   name: string;
   email: string;
   password: string;
-  role: 'CUSTOMER' | 'RESTAURANT' | 'DELIVERY_STAFF';
+  role: 'USER' | 'ADMIN';
 };
 
 // Validation schema using yup
@@ -25,50 +25,57 @@ const schema = yup.object({
   password: yup
     .string()
     .required('Password is required')
-    .min(1, 'Password must be at least 1 characters'),
+    .min(1, 'Password must be at least 8 characters'),
+  role: yup
+    .string()
+    .oneOf(['USER', 'ADMIN'], 'Invalid role')
+    .required('Role is required'),
 });
 
 const SignupForm: React.FC = () => {
   const navigate = useNavigate();
-  const [registerUser, { isLoading, isError, error }] = useRegisterUserMutation();
+  const [registerUser, { isLoading, isError, error }] = useRegisterUserMutation(); // Added isError and error
   const dispatch = useAppDispatch();
-  const [selectedRole, setSelectedRole] = useState<'CUSTOMER' | 'RESTAURANT' | 'DELIVERY_STAFF'>('CUSTOMER');
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
     resolver: yupResolver(schema),
+    defaultValues: { role: 'USER' }, // Default role set to USER
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log('Form Submitted:', { ...data, role: selectedRole });
+    console.log('Form Submitted:', data);
     try {
       // Trigger the register API call
-      const response = await registerUser({...data, role: selectedRole}).unwrap();  // unwrap() is used to directly access the result
-      console.log(response);
+      const response = await registerUser(data).unwrap();
+      console.log(response.data);
+
       // If registration is successful, dispatch login action to set user data in Redux
       dispatch(login({
-        name: response.data.user.name,
-        email: response.data.user.email,
-        role: response.data.user.role,
+        name: response.data.name,
+        email: response.data.email,
+        role: response.data.role,
         accessToken: response.data.accessToken,
-        refreshToken: response.data.user.refreshToken,
+        refreshToken: response.data.refreshToken,
       }));
-      window.localStorage.setItem('name', response.data.user.name);
-      window.localStorage.setItem('email', response.data.user.email);
-      window.localStorage.setItem('role', response.data.user.role);
-      window.localStorage.setItem('accessToken', response.data.accessToken);
-      window.localStorage.setItem('refreshToken', response.data.user.refreshToken);
+
+      window.localStorage.setItem('name', response.user.name);
+      window.localStorage.setItem('email', response.user.email);
+      window.localStorage.setItem('role', response.user.role);
+      window.localStorage.setItem('accessToken', response.accessToken);
+      window.localStorage.setItem('refreshToken', response.user.refreshToken);
       window.localStorage.setItem('isAuthenticated', 'true');
 
-      toast.success("User Registered successfully")
+      toast.success('User Registered successfully');
       console.log('Registration successful:', response);
       reset();
       navigate('/');
-
-      // Handle any post-registration actions like redirecting to login page or home page
     } catch (err) {
-      if (err && typeof err === 'object' && 'data' in err && (err as any).data.err_code === 409) {
-        toast.error("User alredy exists");
-      }
-      console.error('Registration failed:', err);
+      // console.log(err);
+      // if (err?.err_code === 409) {
+      //   toast.error('User already exists');
+      // } else {
+      //   toast.error('Something went wrong, please try again');
+      // }
+      console.error('Registration failed ji :', err);
     }
   };
 
@@ -77,20 +84,6 @@ const SignupForm: React.FC = () => {
       <div className={style.formWrapper}>
         <h1 className={style.header}>Welcome to Food Delivery App</h1>
         <p className={style.subHeader}>Register to get started!</p>
-
-
-        <div className={style.roleSelection}>
-          {['CUSTOMER', 'RESTAURANT', 'DELIVERY_STAFF'].map((role) => (
-            <div
-              key={role}
-              className={`${style.roleButton} ${selectedRole === role ? style.activeRole : ''}`}
-              onClick={() => setSelectedRole(role as 'CUSTOMER' | 'RESTAURANT' | 'DELIVERY_STAFF')}
-            >
-              {role === 'CUSTOMER' ? 'Customer' : role === 'RESTAURANT' ? 'Restaurant' : 'Delivery Staff'}
-            </div>
-          ))}
-        </div>
-
 
         <form className={style.form} onSubmit={handleSubmit(onSubmit)}>
           <div className={style.inputGroup}>
@@ -105,16 +98,33 @@ const SignupForm: React.FC = () => {
             {errors.email && <p className={style.error}>{errors.email.message}</p>}
           </div>
 
+          <div className={style.role}>
+            <div className={style.title}>Select Role</div>
+            <div className={style.radioGroup}>
+              <input type="radio" id="user" value="USER" {...register('role')} />
+              <label htmlFor="user" className={style.radioButton}>
+                User
+              </label>
+
+              <input type="radio" id="admin" value="ADMIN" {...register('role')} />
+              <label htmlFor="admin" className={style.radioButton}>
+                Admin
+              </label>
+            </div>
+          </div>
+
           <div className={style.inputGroup}>
             <label>Enter Password</label>
             <input type="password" {...register('password')} placeholder="Your Password" />
             {errors.password && <p className={style.error}>{errors.password.message}</p>}
           </div>
 
+          {isError && error && (
+            <p className={style.error}>{error.data?.message || 'An error occurred!'}</p>
+          )}
+
           <button type="submit" className={style.registerButton} disabled={isLoading}>
-            {
-              isLoading ? <ButtonLoader /> : <span>Register</span>
-            }
+            {isLoading ? <ButtonLoader /> : <span>Register</span>}
           </button>
           <p>
             Already have an account?{' '}
