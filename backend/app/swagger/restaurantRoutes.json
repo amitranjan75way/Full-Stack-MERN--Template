@@ -1,0 +1,306 @@
+{
+  "/restaurant/add-item": {
+    "post": {
+      "summary": "Add a new menu item to the restaurant",
+      "tags": [
+        "Restaurants"
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the menu item",
+                  "example": "Margherita Pizza"
+                },
+                "price": {
+                  "type": "number",
+                  "description": "Price of the menu item",
+                  "example": 12.99
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the menu item",
+                  "example": "Classic Margherita Pizza with mozzarella cheese and tomato sauce"
+                },
+                "isAvailable": {
+                  "type": "boolean",
+                  "description": "Availability status of the menu item",
+                  "example": true
+                }
+              },
+              "required": [
+                "name",
+                "price"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Menu item added successfully",
+          "content": {
+            "application/json": {
+              "example": {
+                "success": true,
+                "data": {
+                  "id": "63f21c84e7a51093c507d202",
+                  "name": "Margherita Pizza",
+                  "price": 12.99,
+                  "description": "Classic Margherita Pizza with mozzarella cheese and tomato sauce",
+                  "isAvailable": true
+                },
+                "message": "Item added successfully"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized or invalid user",
+          "content": {
+            "application/json": {
+              "example": {
+                "success": false,
+                "error_code": 401,
+                "message": "User not found, please login again",
+                "data": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/restaurant/menu/{restaurantId}": {
+    "get": {
+      "summary": "Get all menu items for a specific restaurant",
+      "tags": [
+        "Restaurants"
+      ],
+      "parameters": [
+        {
+          "name": "restaurantId",
+          "in": "path",
+          "required": true,
+          "description": "The ID of the restaurant",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Menu items fetched successfully",
+          "content": {
+            "application/json": {
+              "example": {
+                "success": true,
+                "data": [
+                  {
+                    "id": "63f21c84e7a51093c507d203",
+                    "name": "Margherita Pizza",
+                    "price": 12.99,
+                    "description": "Classic Margherita Pizza with mozzarella cheese and tomato sauce",
+                    "isAvailable": true
+                  },
+                  {
+                    "id": "63f21c84e7a51093c507d204",
+                    "name": "Pepperoni Pizza",
+                    "price": 15.99,
+                    "description": "Pepperoni Pizza with spicy salami and cheese",
+                    "isAvailable": true
+                  }
+                ],
+                "message": "Menu items fetched successfully"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Restaurant not found",
+          "content": {
+            "application/json": {
+              "example": {
+                "success": false,
+                "error_code": 404,
+                "message": "Restaurant not found",
+                "data": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/restaurant": {
+    "get": {
+      "summary": "Get the list of all restaurants",
+      "tags": [
+        "Restaurants"
+      ],
+      "responses": {
+        "200": {
+          "description": "Restaurants fetched successfully",
+          "content": {
+            "application/json": {
+              "example": {
+                "success": true,
+                "data": [
+                  {
+                    "id": "63f21c84e7a51093c507d205",
+                    "name": "The Italian Place",
+                    "address": "1234 Main Street, Cityville"
+                  },
+                  {
+                    "id": "63f21c84e7a51093c507d206",
+                    "name": "Sushi Heaven",
+                    "address": "5678 Elm Street, Townsville"
+                  }
+                ],
+                "message": "Restaurants fetched successfully"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Server error",
+          "content": {
+            "application/json": {
+              "example": {
+                "success": false,
+                "error_code": 500,
+                "message": "An unexpected error occurred",
+                "data": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/restaurant/order/{restaurantId}/{orderId}": {
+    "put": {
+      "summary": "Update order status by Restaurant",
+      "tags": [
+        "Restaurants"
+      ],
+      "parameters": [
+        {
+          "name": "restaurantId",
+          "in": "path",
+          "required": true,
+          "description": "The ID of the restaurant",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "orderId",
+          "in": "path",
+          "required": true,
+          "description": "The ID of the order",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "accepted",
+                    "rejected", 
+                    "prepared", 
+                    "dispatched"
+                  ],
+                  "description": "Status to update the order with",
+                  "example": "accepted"
+                }
+              },
+              "required": [
+                "status"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Order updated successfully",
+          "content": {
+            "application/json": {
+              "example": {
+                "success": true,
+                "data": {
+                  "id": "63f21c84e7a51093c507d207",
+                  "status": "CONFIRMED",
+                  "items": [
+                    {
+                      "id": "63f21c84e7a51093c507d203",
+                      "name": "Margherita Pizza",
+                      "price": 12.99
+                    }
+                  ],
+                  "totalAmount": 12.99,
+                  "restaurantId": "63f21c84e7a51093c507d205",
+                  "userId": "63f21c84e7a51093c507d208"
+                },
+                "message": "Order updated successfully"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request parameters",
+          "content": {
+            "application/json": {
+              "example": {
+                "success": false,
+                "error_code": 400,
+                "message": "Order id is required",
+                "data": {}
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Order not found",
+          "content": {
+            "application/json": {
+              "example": {
+                "success": false,
+                "error_code": 404,
+                "message": "Order not found",
+                "data": {}
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Server error",
+          "content": {
+            "application/json": {
+              "example": {
+                "success": false,
+                "error_code": 500,
+                "message": "An unexpected error occurred",
+                "data": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,135 @@
+:root {
+  --primary-orange: #fc8019;
+  --secondary-orange: #ff914d;
+  --gray: #f5f5f5;
+  --dark-gray: #333;
+  --white: #fff;
+}
+
+.signupContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--gray);
+  padding: 20px;
+}
+
+.formWrapper {
+  max-width: 450px;
+  width: 100%;
+  padding: 30px;
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  color: var(--dark-gray);
+}
+
+.subHeader {
+  font-size: 16px;
+  text-align: center;
+  color: var(--dark-gray);
+  margin-bottom: 20px;
+}
+
+.roleSelection {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.roleButton {
+  flex: 1;
+  margin: 0 5px;
+  padding: 10px;
+  text-align: center;
+  background: var(--gray);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--dark-gray);
+  transition: all 0.3s ease;
+}
+
+.roleButton:hover {
+  background: var(--secondary-orange);
+  color: var(--white);
+}
+
+.activeRole {
+  background: var(--primary-orange);
+  color: var(--white);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.inputGroup label {
+  font-weight: bold;
+  color: var(--dark-gray);
+  margin-bottom: 5px;
+  display: block;
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: border-color 0.3s ease;
+}
+
+.inputGroup input:focus {
+  border-color: var(--primary-orange);
+  outline: none;
+}
+
+.error {
+  font-size: 12px;
+  color: #ff4d4d;
+  margin-top: 5px;
+}
+
+.registerButton {
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--white);
+  background-color: var(--primary-orange);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.registerButton:hover {
+  background-color: var(--secondary-orange);
+  transform: scale(1.02);
+}
+
+.loginLink {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.loginButton {
+  color: var(--primary-orange);
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.loginButton:hover {
+  text-decoration: underline;
+}
