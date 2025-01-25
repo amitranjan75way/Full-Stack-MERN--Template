@@ -69,13 +69,11 @@ const SignupForm: React.FC = () => {
       reset();
       navigate('/');
     } catch (err) {
-      // console.log(err);
-      // if (err?.err_code === 409) {
-      //   toast.error('User already exists');
-      // } else {
-      //   toast.error('Something went wrong, please try again');
-      // }
-      console.error('Registration failed ji :', err);
+      if ((err as any)?.data?.err_code === 409) {
+        toast.error('User already exists');
+      } else {
+        toast.error('Something went wrong, please try again');
+      }
     }
   };
 
