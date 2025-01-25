@@ -25,8 +25,8 @@ const Header = () => {
   return (
     <header className={style.header}>
       <div className={style.logo} onClick={() => navigate('/')}>
-        <img src={logo} alt="Food Delivery App Logo" />
-        <h1>Food Delivery</h1>
+        <img src={logo} alt="FApp Logo" />
+        <h1>My App</h1>
       </div>
       <nav className={style.nav}>
         <ul>

@@ -1,65 +1,18 @@
 
 import { type IUser } from "./user.dto";
 import UserSchema from "./user.schema";
-import customerSchema from "../customers/customer.schema";
-import restaurantSchema from "../restaurants/restaurent.schema";
-import deliveryStaffSchema from "../deliveryStaff/delivery.schema";
-import customerCartSchema from "../customers/customer.cart.schema";
 
 
 /**
- * Creates a new user and initializes additional information based on the user's role.
+ * Creates a new user.
  *
  * @param {IUser} data - The user data to create a new user.
  * @returns {Promise<UserSchema>} The created user with additional information.
  *
  * @throws {Error} If there is an error during the creation process.
- *
- * The function performs the following steps:
- * 1. Creates a new user using the provided data.
- * 2. If the user's role is "RESTAURANT", it creates a new restaurant entry and associates it with the user.
- * 3. If the user's role is "DELIVERY_STAFF", it creates a new delivery staff entry and associates it with the user.
- * 4. For any other role, it creates a new customer cart and customer entry, then associates them with the user.
  */
 export const createUser = async (data: IUser) => {
     const result = await UserSchema.create({ ...data });
-    if (data.role === "RESTAURANT") {
-        const restaurant = new restaurantSchema({
-            userId: result._id,
-            menu: [],
-            address: null,
-            orders: []
-        });
-        const res = await restaurant.save();
-        result.additionalInfo = res._id as any;
-        await result.save();
-    } else if (data.role === "DELIVERY_STAFF") {
-        const deliveryStaff = new deliveryStaffSchema({
-            userId: result._id,
-            address: null
-        });
-        const res = await deliveryStaff.save();
-        result.additionalInfo = res._id as any;
-        await result.save();
-    } else {
-        const cart = new customerCartSchema({
-            userId: result._id,
-            items: [],
-            total: 0,
-            restaurantId: null,
-        });
-        const newCart = await cart.save();
-
-        const customer = new customerSchema({
-            userId: result._id,
-            addresses: null,
-            orders: [],
-            cart: newCart._id
-        });
-        const res = await customer.save();
-        result.additionalInfo = res._id as any;
-        await result.save();
-    }
     return result;
 };
 
@@ -87,7 +40,7 @@ export const isUserExistByEamil = async (email: string) => {
  */
 export const getUserByEmail = async (email: string) => {
     const result = await UserSchema.findOne({ email }).lean();
-    return result;
+    return result as IUser;
 };
 
 
@@ -103,7 +56,7 @@ export const updateRefreshToken = async (id: string, refreshToken: string) => {
         { refreshToken },
         { new: true }
     );
-    return user;
+    return user as IUser;
 }
 
 
@@ -121,12 +74,26 @@ export const getUserById = async (id: string) => {
 
 
 /**
- * Deletes the refresh token for a user by their email address.
+ * Deletes the refresh token for a user by their user id.
  *
- * @param {string} email - The email address of the user to delete the refresh token for.
+ * @param {string} id - The email address of the user to delete the refresh token for.
  * @returns {Promise<any>} A promise that resolves to the updated user document.
  */
-export const deleteRefreshToken = async (email: string) => {
-    const user = await UserSchema.findOneAndUpdate({ email }, { refreshToken: '' });
-    return user;
+export const deleteRefreshToken = async (id: string) => {
+    const user = await UserSchema.findByIdAndUpdate(id, { refreshToken: '' });
+    return user as IUser;
+}
+
+/**
+ * Updates the password for a user by their ID.
+ *
+ * @param {string} userId - The ID of the user to update the password for.
+ * @param {any} data - An object containing the new password.
+ * @returns {Promise<IUser>} A promise that resolves to the updated user document.
+ *
+ * @throws {Error} If there is an error during the update process.
+ */
+export const updatePassword = async(userId: string, data: any) => {
+    const user = await UserSchema.findByIdAndUpdate(userId, {password: data.newPassword});
+    return user as IUser;
 }

@@ -1,13 +1,13 @@
 import jwt from 'jsonwebtoken';
-import { Payload } from '../dto/base.dto';
 import { loadConfig } from "./config.hepler";
 import createHttpError from "http-errors";
+import { Payload } from '../../user/user.dto';
 loadConfig();
 
 const ACCESS_TOKEN_SECRET: string = process.env.ACCESS_TOKEN_SECRET as string;
 const REFRESH_TOKEN_SECRET: string = process.env.REFRESH_TOKEN_SECRET as string;
-const ACCESS_TOKEN_EXPIRY = '15min'; // 15 minutes
-const REFRESH_TOKEN_EXPIRY = '7d'; // 7 days
+const ACCESS_TOKEN_EXPIRY : string = process.env.ACCESS_TOKEN_EXPIRY as string;
+const REFRESH_TOKEN_EXPIRY : string = process.env.REFRESH_TOKEN_EXPIRY as string;
 
 
 export const generateTokens = (payload: Payload) => {
@@ -26,7 +26,7 @@ export const validateToken = (token: string, secret: string) => {
 };
 export const decodeAccessToken = async (encryptedAccessToken : string) => {
   // Verify token and attach the user information to the request object
-  const payload = jwt.verify(encryptedAccessToken, ACCESS_TOKEN_SECRET) as any;
+  const payload: Payload = jwt.verify(encryptedAccessToken, ACCESS_TOKEN_SECRET) as Payload;
   
   if (payload === null) {
       throw createHttpError(403, {

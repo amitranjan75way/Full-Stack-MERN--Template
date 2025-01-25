@@ -1,12 +1,10 @@
 import * as userService from "./user.service";
 import { createResponse } from "../common/helper/response.hepler";
 import asyncHandler from "express-async-handler";
-import e, { type Request, type Response } from "express";
+import { type Request, type Response } from "express";
 import { IUser } from "./user.dto";
-import { error } from "console";
 import createHttpError from "http-errors";
-import { generateTokens, validateToken } from "../common/helper/jwt.helper";
-import { Payload } from "../common/dto/base.dto";
+import { Payload } from "./user.dto";
 import bcrypt from "bcrypt";
 import { sendEmail } from "../common/services/email.service";
 import { resetPasswordEmailTemplate } from "../common/template/mail.template";
@@ -24,28 +22,28 @@ const REFRESH_TOKEN_SECRET: string = process.env.REFRESH_TOKEN_SECRET as string;
  * @param {Response} res - The response object used to send the result.
  * @throws {HttpError} If the user already exists or refresh token update fails.
  */
-export const registerUser = asyncHandler(
-  async (req: Request, res: Response) => {
+export const registerUser = asyncHandler(async (req: Request, res: Response) => {
     const data: IUser = req.body;
 
-    const isUserExist: boolean = await userService.isUserExistByEamil(
-      data.email
-    );
+    const isUserExist: boolean = await userService.isUserExistByEamil(data.email);
     if (isUserExist) {
       throw createHttpError(409, "User already Exits");
     }
 
     const result: IUser = await userService.createUser(data);
+
     const payload: Payload = {
-      id: result._id,
+      _id: result._id,
       name: result.name,
       email: result.email,
       role: result.role,
     };
-    const { refreshToken, accessToken } = generateTokens(payload);
-    const user = await userService.updateRefreshToken(result._id, refreshToken);
+    const { refreshToken, accessToken } = jwthelper.generateTokens(payload);
+    
+    
+    const user: IUser = await userService.updateRefreshToken(result._id, refreshToken);
     if (!user) {
-      throw createHttpError(500, "Failed to update refresh token");
+      throw createHttpError(500, "Failed to update refresh token, Login to continue");
     }
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
@@ -57,9 +55,16 @@ export const registerUser = asyncHandler(
       secure: false,
       sameSite: false,
     });
-    res.send(
-      createResponse({ user, accessToken }, "User Registered Successfully")
-    );
+    const response = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      refreshToken,
+      accessToken
+    } 
+    
+    res.send(createResponse(response, "User Registered Successfully"));
   }
 );
 
@@ -79,18 +84,18 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
 
   if (await bcrypt.compare(data.password, user.password)) {
     const payload: Payload = {
-      id: user._id,
+      _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
     };
-    const { refreshToken, accessToken } = generateTokens(payload);
+    const { refreshToken, accessToken } = jwthelper.generateTokens(payload);
     const updatedUser = await userService.updateRefreshToken(
       user._id,
       refreshToken
     );
     if (!updatedUser) {
-      throw createHttpError(500, "Failed to update refresh token");
+      throw createHttpError(500, "Failed to update refresh token, try again");
     }
 
     res.cookie("accessToken", accessToken, {
@@ -104,10 +109,16 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
       sameSite: false,
     });
 
-    user.password = "";
-    res.send(
-      createResponse({ user, accessToken }, "User logged in successfully")
-    );
+    const response = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      refreshToken,
+      accessToken
+    }
+    res.send(createResponse(response, "User logged in successfully"));
+
   } else {
     throw createHttpError(401, "wrong password | Unauthorised access");
   }
@@ -124,7 +135,7 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
   if (!user) {
     throw createHttpError(401, "User not found, please login again");
   }
-  const result = await userService.deleteRefreshToken(user.email);
+  const result: IUser = await userService.deleteRefreshToken(user._id);
   res.clearCookie("accessToken");
   res.clearCookie("refreshToken");
   res.send(createResponse(null, "User logged out successfully"));
@@ -136,14 +147,13 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
  * @param {Response} res - The response object used to send the result.
  * @throws {HttpError} If the refresh token is not found, invalid, or the user is not found.
  */
-export const updateAccessToken = asyncHandler(
-  async (req: Request, res: Response) => {
-    const refreshToken =
-      req.cookies.refreshToken || req.headers.authorization?.split(" ")[1];
+export const updateAccessToken = asyncHandler(async (req: Request, res: Response) => {
+    const refreshToken = req.cookies.refreshToken || req.headers.authorization?.split(" ")[1];
     if (!refreshToken) {
       throw createHttpError(401, "Refresh token not found");
     }
-    const { valid, decoded } = validateToken(
+
+    const { valid, decoded } = jwthelper.validateToken(
       refreshToken,
       REFRESH_TOKEN_SECRET
     );
@@ -151,22 +161,63 @@ export const updateAccessToken = asyncHandler(
       throw createHttpError(401, "Invalid refresh token, Please login again");
     }
     const payload: Payload = decoded as Payload;
-    const user = await userService.getUserById(payload.id);
+    const user = await userService.getUserById(payload._id);
     if (!user) {
       throw createHttpError(404, "User not found");
     }
     const newPayload: Payload = {
-      id: user._id,
+      _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
     };
-    const { accessToken } = generateTokens(newPayload);
+    const { accessToken } = jwthelper.generateTokens(newPayload);
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
-    res.send(createResponse(user, "Access token updated successfully"));
+
+    const response = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      refreshToken,
+      accessToken
+    }
+
+    res.send(createResponse(response, "Access token updated successfully"));
   }
 );
+
+
+/**
+ * Change the password of the authenticated user.
+ *
+ * @param {Request} req - The request object containing user and body data.
+ * @param {Response} res - The response object to send the result.
+ * @throws {createHttpError} 404 - If the user is not found or not logged in.
+ * @throws {createHttpError} 401 - If the old password is incorrect.
+ * @returns {Promise<void>} - Sends a response indicating the password update status.
+ */
+export const updatePassword = asyncHandler(async(req: Request, res: Response)=>{
+  const user = req.user;
+  if (!user) {
+    throw createHttpError(404, "User not found, please login again");
+  }
+  const isUser = await userService.getUserById(user._id);
+  if(!isUser) {
+    throw createHttpError(404, "User not found, please login again");
+  }
+  const data = req.body;
+  if(await bcrypt.compare(isUser.password, data.oldPassword)) {
+    const updatedUser = await userService.updatePassword(user._id, data);
+  } else {
+    throw createHttpError(401, "Incorrect old password, unauthorised access")
+  }
+  
+  res.send(createResponse(200, "Password updated successfully"));
+});
+
+

@@ -33,15 +33,11 @@ const UserSchema = new mongoose.Schema<IUser>(
     role: {
       type: String,
       required: true,
-      enum: ["CUSTOMER", "RESTAURANT", "DELIVERY_STAFF"],
-      default: "CUSTOMER",
+      enum: ["USER", "ADMIN"],
+      default: "USER",
     },
     refreshToken: {
       type: String,
-    },
-    additionalInfo: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: false
     },
   },
   { timestamps: true }

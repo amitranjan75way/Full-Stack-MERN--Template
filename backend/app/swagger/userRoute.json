@@ -14,7 +14,7 @@
               "name": "Jane Doe",
               "email": "janedoe@example.com",
               "password": "mypassword",
-              "role": "CUSTOMER"
+              "role": "USER"
             }
           }
         }
