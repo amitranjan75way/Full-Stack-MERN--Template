@@ -37,17 +37,12 @@ const express_1 = require("express");
 const cath_error_middleware_1 = require("../common/middleware/cath-error.middleware");
 const userController = __importStar(require("./user.controller"));
 const userValidator = __importStar(require("./user.validation"));
+const authMiddlerware = __importStar(require("../common/middleware/auth.middleware"));
 const router = (0, express_1.Router)();
 router
-    // .get("/", userController.getAllUser)
-    // .get("/:id", userController.getUserById)
-    // .delete("/:id", userController.deleteUser)
-    // .post("/", userValidator.createUser, catchError, userController.createUser)
-    // .put("/:id", userValidator.updateUser, catchError, userController.updateUser)
-    // .patch("/:id", userValidator.editUser, catchError, userController.editUser)
-    .post("/", userValidator.createUser, cath_error_middleware_1.catchError, userController.createUser)
-    .post("/reset-password", userValidator.resetUserPassword, cath_error_middleware_1.catchError, userController.resetUserPassword)
-    .post("/register", userValidator.registerUser, cath_error_middleware_1.catchError, userController.registerUser)
-    .post("/login", userValidator.loginUser, cath_error_middleware_1.catchError, userController.loginUser)
-    .post("/logout", userController.logout);
+    .post('/register', userValidator.registerUser, cath_error_middleware_1.catchError, userController.registerUser)
+    .post('/update-access-token', cath_error_middleware_1.catchError, userController.updateAccessToken)
+    .post('/login', userValidator.loginUser, cath_error_middleware_1.catchError, userController.loginUser)
+    .post('/logout', authMiddlerware.auth, cath_error_middleware_1.catchError, userController.logout)
+    .patch('/update-password', authMiddlerware.auth, userValidator.updatePassword, userController.updatePassword);
 exports.default = router;

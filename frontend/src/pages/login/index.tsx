@@ -1,12 +1,13 @@
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useLoginUserMutation } from '../../services/api';
+import { useLoginUserMutation } from '../../services/authApi';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import style from './index.module.css';
 import { useAppDispatch } from '../../store/store';
 import { login } from '../../store/reducers/authReducer';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 // Define the type for the form data
 type LoginFormData = {
@@ -34,23 +35,29 @@ const LoginForm: React.FC = () => {
       const result = await loginUser(data).unwrap();
       console.log('Login successful:', result.data);
       dispatch(login({
-        name: result.data.user.name,
-        email: result.data.user.email,
-        role: result.data.user.role,
+        name: result.data.name,
+        email: result.data.email,
+        role: result.data.role,
         accessToken: result.data.accessToken,
-        refreshToken: result.data.user.refreshToken,
+        refreshToken: result.data.refreshToken,
       }));
-      window.localStorage.setItem('name', result.data.user.name);
-      window.localStorage.setItem('email', result.data.user.email);
-      window.localStorage.setItem('role', result.data.user.role);
+      window.localStorage.setItem('name', result.data.name);
+      window.localStorage.setItem('email', result.data.email);
+      window.localStorage.setItem('role', result.data.role);
       window.localStorage.setItem('accessToken', result.data.accessToken);
-      window.localStorage.setItem('refreshToken', result.data.user.refreshToken);
+      window.localStorage.setItem('refreshToken', result.data.refreshToken);
       window.localStorage.setItem('isAuthenticated', 'true');
       navigate('/');
 
       // Handle successful login, e.g., save token or redirect
     } catch (err) {
       console.error('Login failed:', err);
+      if ((err as any)?.data?.err_code === 404) {
+        toast.error('User Not found');
+      }
+      if ((err as any)?.data?.err_code === 401) {
+        toast.error('Incorrect password');
+      }
     }
   };
 
@@ -83,7 +90,7 @@ const LoginForm: React.FC = () => {
 
           {/* Register Button */}
           <div className={style.registerLink}>
-            <p>Don't have an account? <a href="/register" className={style.registerButton}>Register</a></p>
+            <p>Don't have an account? <Link to="/register" className={style.registerButton}>Register</Link></p>
           </div>
         </form>
       </div>

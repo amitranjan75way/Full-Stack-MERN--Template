@@ -11,8 +11,8 @@ router
         .post('/register', userValidator.registerUser, catchError, userController.registerUser)
         .post('/update-access-token', catchError, userController.updateAccessToken)
         .post('/login', userValidator.loginUser, catchError, userController.loginUser)
-        .post('/logout', authMiddlerware.auth, catchError, userController.logout)
-        .post('/update-password', authMiddlerware.auth, userValidator.updatePassword, userController.updatePassword);
+        .post('/logout',authMiddlerware.auth, catchError, userController.logout)
+        .patch('/update-password', authMiddlerware.auth, userValidator.updatePassword, userController.updatePassword);
         
 export default router;
 

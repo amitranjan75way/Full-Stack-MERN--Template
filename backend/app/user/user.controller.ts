@@ -211,7 +211,8 @@ export const updatePassword = asyncHandler(async(req: Request, res: Response)=>{
     throw createHttpError(404, "User not found, please login again");
   }
   const data = req.body;
-  if(await bcrypt.compare(isUser.password, data.oldPassword)) {
+
+  if(await bcrypt.compare(data.oldPassword, isUser.password)) {
     const updatedUser = await userService.updatePassword(user._id, data);
   } else {
     throw createHttpError(401, "Incorrect old password, unauthorised access")

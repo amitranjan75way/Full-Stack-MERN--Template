@@ -14,26 +14,48 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const Schema = mongoose_1.default.Schema;
 const hashPassword = (password) => __awaiter(void 0, void 0, void 0, function* () {
     const hash = yield bcrypt_1.default.hash(password, 12);
     return hash;
 });
-const UserSchema = new Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    active: { type: Boolean, required: false, default: true },
-    role: { type: String, required: true, enum: ["USER", "ADMIN"], default: "USER" },
-    password: { type: String, required: true },
-    refreshToken: { type: String, required: false, default: null },
-    kycDoc: { type: String, required: false, default: null },
-    onBoard: { type: Boolean, required: false, default: false }
+const UserSchema = new mongoose_1.default.Schema({
+    name: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        validate: {
+            validator: (value) => {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+            },
+            message: "Invalid email format",
+        },
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+    role: {
+        type: String,
+        required: true,
+        enum: ["USER", "ADMIN"],
+        default: "USER",
+    },
+    refreshToken: {
+        type: String,
+    },
 }, { timestamps: true });
 UserSchema.pre("save", function (next) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (this.password) {
-            this.password = yield hashPassword(this.password);
+        if (!this.isModified("password")) {
+            return next();
         }
+        this.password = yield hashPassword(this.password);
         next();
     });
 });

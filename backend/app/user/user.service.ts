@@ -1,6 +1,7 @@
 
 import { type IUser } from "./user.dto";
 import UserSchema from "./user.schema";
+import bcrypt from 'bcrypt';
 
 
 /**
@@ -94,6 +95,9 @@ export const deleteRefreshToken = async (id: string) => {
  * @throws {Error} If there is an error during the update process.
  */
 export const updatePassword = async(userId: string, data: any) => {
-    const user = await UserSchema.findByIdAndUpdate(userId, {password: data.newPassword});
+    
+    const hashedPass = await bcrypt.hash(data.newPassword, 12);
+     
+    const user = await UserSchema.findByIdAndUpdate(userId, {password: hashedPass});
     return user as IUser;
 }

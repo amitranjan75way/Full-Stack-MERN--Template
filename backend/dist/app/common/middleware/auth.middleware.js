@@ -12,24 +12,51 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.auth = void 0;
-const http_errors_1 = __importDefault(require("http-errors"));
-const express_async_handler_1 = __importDefault(require("express-async-handler"));
+exports.isAdmin = exports.isUser = exports.auth = void 0;
 const config_hepler_1 = require("../helper/config.hepler");
-const response_hepler_1 = require("../helper/response.hepler");
+const express_async_handler_1 = __importDefault(require("express-async-handler"));
+const http_errors_1 = __importDefault(require("http-errors"));
 const jwt_helper_1 = require("../helper/jwt.helper");
 (0, config_hepler_1.loadConfig)();
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
-// todo : make this function fully functional 
+// Middleware for role-based authentication
 exports.auth = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const token = req.cookies.accessToken || ((_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1]);
-    if (!token || token === undefined) {
-        throw (0, http_errors_1.default)(401, "Auth: token is missing");
+    const token = req.cookies.accessToken || ((_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.replace("Bearer ", ""));
+    if (!token) {
+        throw (0, http_errors_1.default)(401, {
+            message: "Token is required for authentication",
+        });
     }
-    const { valid, decoded } = (0, jwt_helper_1.validateToken)(token, ACCESS_TOKEN_SECRET);
-    // req.user = decoded as Payload;
-    console.log(decoded);
-    res.send((0, response_hepler_1.createResponse)(decoded, "user verified successfully"));
+    const user = yield (0, jwt_helper_1.decodeAccessToken)(token);
+    if (!user) {
+        throw (0, http_errors_1.default)(401, {
+            message: "Invalid or expired token",
+        });
+    }
+    // Check if user has a valid role
+    if (!user.role || !["USER", "ADMIN"].includes(user.role)) {
+        throw (0, http_errors_1.default)(403, {
+            message: "Invalid or unauthorized user role",
+        });
+    }
+    req.user = user;
+    next();
 }));
+const isUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    if (!user || user.role !== "USER") {
+        next((0, http_errors_1.default)(403, "Only User can access this route"));
+    }
+    next();
+});
+exports.isUser = isUser;
+const isAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    if (!user || user.role !== "ADMIN") {
+        next((0, http_errors_1.default)(403, "only Admin can access this route"));
+    }
+    next();
+});
+exports.isAdmin = isAdmin;

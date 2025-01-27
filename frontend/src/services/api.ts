@@ -1,55 +1,101 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import {
+  BaseQueryFn,
+  FetchArgs,
+  FetchBaseQueryError,
+} from "@reduxjs/toolkit/query";
+import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { RootState } from "../store/store";
+import { logout, resetTokens, setTokens } from "../store/reducers/authReducer";
 
-export const api = createApi({
-  reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ 
-    baseUrl: 'http://localhost:4000/api',
-    credentials: 'include',
-  }),
-  endpoints: (builder) => ({
+const baseURL = "http://localhost:/4000/api";
 
-    // Mutation to register a new user
-    registerUser: builder.mutation({
-      query: (userData) => ({
-        url: '/users/register',
-        method: 'POST',
-        body: userData,
-      }),
-    }),
+// Interface for the refresh token response
+interface RefreshTokenResponse {
+  _id: string;
+  name: string;
+  emai: string;
+  role: string;
+  accessToken: string;
+  refreshToken: string;
+}
 
-    // Mutation to log in a user
-    loginUser: builder.mutation({
-      query: (userData) => ({
-        url: '/users/login',
-        method: 'POST',
-        body: userData,
-      }),
-    }),
-
-    // Query to fetch the list of restaurants
-    getRestaurantList: builder.query({
-      query: () => ({
-        url: '/customer/restaurantList',
-        method: 'GET',
-      }),
-    }),
-
-    addMenuItem: builder.mutation({
-      query: (data) => ({
-        url: '/restaurant/add-item',
-        method: 'POST',
-        body: data
-      })
-    }),
-
-
-  }),
+const refreshTokenBaseQuery = fetchBaseQuery({
+  baseUrl: baseURL,
+  prepareHeaders: (headers, { getState }) => {
+    const state = getState() as RootState;
+    const refreshToken = state.auth.refreshToken;
+    if (refreshToken) {
+      headers.set("Authorization", `Bearer ${refreshToken}`);
+    }
+    return headers;
+  },
 });
 
-// Export hooks for each API endpoint
-export const {
-  useRegisterUserMutation,
-  useGetRestaurantListQuery,
-  useLoginUserMutation,
-  useAddMenuItemMutation
-} = api;
+export const publicBaseQuery = fetchBaseQuery({
+  baseUrl: baseURL,
+});
+
+export const baseQuery = fetchBaseQuery({
+  baseUrl: baseURL,
+  prepareHeaders: (headers, { getState }) => {
+    const state = getState() as RootState;
+    const accessToken = state.auth.accessToken;
+    if (accessToken) {
+      headers.set("Authorization", `Bearer ${accessToken}`);
+    }
+    return headers;
+  },
+});
+
+export const baseQueryWithReauth: BaseQueryFn<
+  FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
+  let result = await baseQuery(args, api, extraOptions);
+
+  if (result.error && result.error.status === 401) {
+    // Access token expired, attempt to refresh
+    const state = api.getState() as RootState;
+    const refreshToken = state.auth.refreshToken;
+
+    if (refreshToken) {
+      // Attempt token refresh
+      const refreshResult = await refreshTokenBaseQuery(
+        {
+          url: "refresh-token",
+          method: "POST",
+        },
+        api,
+        extraOptions
+      );
+
+      if ((refreshResult.data as RefreshTokenResponse)) {
+        const { accessToken: newAccessToken, refreshToken: newRefreshToken } = (
+          refreshResult.data as RefreshTokenResponse
+        );
+
+        // Save new tokens in Redux state
+        api.dispatch(
+          setTokens({
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken,
+          })
+        );
+
+        // Retry the original request with the new access token
+        result = await baseQuery(args, api, extraOptions);
+      } else {
+        // Refresh token failed, log the user out
+        api.dispatch(resetTokens());
+        api.dispatch(logout());
+      }
+    } else {
+      // No refresh token available, log the user out
+      api.dispatch(resetTokens());
+      api.dispatch(logout());
+    }
+  }
+
+  return result;
+};

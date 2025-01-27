@@ -18,12 +18,14 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const morgan_1 = __importDefault(require("morgan"));
 const http_1 = __importDefault(require("http"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const cors_1 = __importDefault(require("cors"));
 const database_service_1 = require("./app/common/services/database.service");
 const passport_jwt_service_1 = require("./app/common/services/passport-jwt.service");
 const config_hepler_1 = require("./app/common/helper/config.hepler");
 const error_handler_middleware_1 = __importDefault(require("./app/common/middleware/error-handler.middleware"));
 const routes_1 = __importDefault(require("./app/routes"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const rate_limit_middleware_1 = __importDefault(require("./app/common/middleware/rate-limit.middleware"));
 (0, config_hepler_1.loadConfig)();
 const port = (_a = Number(process.env.PORT)) !== null && _a !== void 0 ? _a : 5000;
 const app = (0, express_1.default)();
@@ -32,6 +34,11 @@ app.use(body_parser_1.default.json());
 app.use(express_1.default.json());
 app.use((0, morgan_1.default)("dev"));
 app.use((0, cookie_parser_1.default)());
+app.use((0, cors_1.default)({
+    origin: process.env.BASE_URL,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+}));
 const swagger_1 = __importDefault(require("./app/swagger/swagger"));
 const initApp = () => __awaiter(void 0, void 0, void 0, function* () {
     // init mongodb
@@ -39,7 +46,7 @@ const initApp = () => __awaiter(void 0, void 0, void 0, function* () {
     // passport init
     (0, passport_jwt_service_1.initPassport)();
     // set base path to /api
-    app.use("/api", routes_1.default);
+    app.use("/api", rate_limit_middleware_1.default, routes_1.default);
     app.get("/", (req, res) => {
         res.send({ status: "ok" });
     });

@@ -4,6 +4,7 @@
   --gray: #f5f5f5;
   --dark-gray: #333;
   --white: #fff;
+  --input-border: #ddd;
 }
 
 .signupContainer {
@@ -31,41 +32,15 @@
   color: var(--dark-gray);
 }
 
+.brandName {
+  color: var(--primary-orange);
+}
+
 .subHeader {
   font-size: 16px;
   text-align: center;
   color: var(--dark-gray);
   margin-bottom: 20px;
-}
-
-.roleSelection {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.roleButton {
-  flex: 1;
-  margin: 0 5px;
-  padding: 10px;
-  text-align: center;
-  background: var(--gray);
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  color: var(--dark-gray);
-  transition: all 0.3s ease;
-}
-
-.roleButton:hover {
-  background: var(--secondary-orange);
-  color: var(--white);
-}
-
-.activeRole {
-  background: var(--primary-orange);
-  color: var(--white);
 }
 
 .form {
@@ -74,31 +49,74 @@
   gap: 15px;
 }
 
+.inputGroup, .role {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.inputGroup input, .role input, .dropdown {
+  padding: 10px 20px;
+}
+
 .inputGroup label {
   font-weight: bold;
   color: var(--dark-gray);
   margin-bottom: 5px;
-  display: block;
 }
 
-.inputGroup input {
-  width: 100%;
-  padding: 10px;
+.inputGroup input,
+.passwordWrapper input,
+.dropdown,
+.registerButton {
+  /* width: 100%;
+  padding: 10px; */
   font-size: 14px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--input-border);
   border-radius: 5px;
   transition: border-color 0.3s ease;
 }
 
-.inputGroup input:focus {
+.inputGroup input:focus,
+.passwordWrapper input:focus,
+.dropdown:focus {
   border-color: var(--primary-orange);
   outline: none;
 }
 
+.passwordWrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.passwordWrapper input {
+  flex: 1;
+}
+
+.eyeButton {
+  background: none;
+  border: none;
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: var(--dark-gray);
+}
+
+.dropdown {
+  background-color: var(--white);
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dropdown:hover {
+  border-color: var(--primary-orange);
+}
+
 .error {
-  font-size: 12px;
-  color: #ff4d4d;
-  margin-top: 5px;
+  font-size: 0.875rem;
+  color: red;
+  margin-top: 0.25rem;
 }
 
 .registerButton {
@@ -118,11 +136,6 @@
   transform: scale(1.02);
 }
 
-.loginLink {
-  text-align: center;
-  margin-top: 20px;
-}
-
 .loginButton {
   color: var(--primary-orange);
   font-weight: bold;
@@ -132,56 +145,4 @@
 
 .loginButton:hover {
   text-decoration: underline;
-}
-
-/* Main container for role selection */
-.role {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-}
-
-/* Title for the selection */
-.title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--dark-gray);
-}
-
-/* Wrapper for radio buttons */
-.radioGroup {
-  display: flex;
-  gap: 1rem;
-}
-
-/* Hide default radio buttons */
-input[type="radio"] {
-  display: none;
-}
-
-/* Label styling for radio buttons */
-.radioButton {
-  cursor: pointer;
-  padding: 0.5rem 1.5rem;
-  border: 2px solid var(--gray);
-  border-radius: 8px;
-  background-color: var(--gray);
-  color: var(--dark-gray);
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
-
-/* Selected state */
-input[type="radio"]:checked + .radioButton {
-  background-color: var(--primary-orange);
-  border-color: var(--secondary-orange);
-  color: var(--white);
-}
-
-/* Hover effect */
-.radioButton:hover {
-  background-color: var(--secondary-orange);
-  border-color: var(--primary-orange);
-  color: var(--white);
 }

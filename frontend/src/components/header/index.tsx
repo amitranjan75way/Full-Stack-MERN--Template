@@ -1,25 +1,35 @@
 import React from 'react';
 import style from './index.module.css';
 import logo from '../../accets/logo.jpg';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../store/store';
 import { logout } from '../../store/reducers/authReducer';
+import { useLogoutUserMutation } from '../../services/userApi';
 
 const Header = () => {
+  const [logoutUser, { isLoading }] = useLogoutUserMutation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { isAuthenticated, name } = useAppSelector((store) => store.auth);
 
-  const handleLogout = () => {
-    window.localStorage.removeItem('name');
-    window.localStorage.removeItem('email');
-    window.localStorage.removeItem('role');
-    window.localStorage.removeItem('accessToken');
-    window.localStorage.removeItem('refreshToken');
-    window.localStorage.removeItem('isAuthenticated');
-
-    dispatch(logout());
-    navigate('/');
+  const handleLogout = async() => {
+    try {
+      const response = await logoutUser({});
+      console.log("User logout", response)
+      window.localStorage.removeItem('name');
+      window.localStorage.removeItem('email');
+      window.localStorage.removeItem('role');
+      window.localStorage.removeItem('accessToken');
+      window.localStorage.removeItem('refreshToken');
+      window.localStorage.removeItem('isAuthenticated');
+  
+      dispatch(logout());
+      navigate('/');
+      console.log(response);
+    } catch (error) {
+      console.log(error)
+    }
+   
   };
 
   return (
@@ -30,10 +40,10 @@ const Header = () => {
       </div>
       <nav className={style.nav}>
         <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/menu">Menu</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/contact">Contact</a></li>
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/menu">Menu</Link></li>
+          <li><Link to="/about">About</Link></li>
+          <li><Link to="/contact">Contact</Link></li>
         </ul>
       </nav>
       <div className={style.actions}>

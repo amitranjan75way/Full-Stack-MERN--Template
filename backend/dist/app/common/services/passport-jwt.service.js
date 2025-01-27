@@ -93,10 +93,10 @@ const initPassport = () => {
                 done((0, http_errors_1.default)(401, "User not found!"), false);
                 return;
             }
-            if (!user.active) {
-                done((0, http_errors_1.default)(401, "User is inactive"), false);
-                return;
-            }
+            // if (!user.active) {
+            //   done(createError(401, "User is inactive"), false);
+            //   return;
+            // }
             // if (user.blocked) {
             //   done(createError(401, "User is blocked, Contact to admin"), false);
             //   return;

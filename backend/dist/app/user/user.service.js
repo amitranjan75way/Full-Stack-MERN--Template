@@ -12,13 +12,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserByEmail = exports.resetPassword = exports.addUserByAdmin = exports.updateRefreshToken = exports.findUserByEmail = exports.isUserExistByEamil = exports.createUser = void 0;
+exports.updatePassword = exports.deleteRefreshToken = exports.getUserById = exports.updateRefreshToken = exports.getUserByEmail = exports.isUserExistByEamil = exports.createUser = void 0;
 const user_schema_1 = __importDefault(require("./user.schema"));
+/**
+ * Creates a new user.
+ *
+ * @param {IUser} data - The user data to create a new user.
+ * @returns {Promise<UserSchema>} The created user with additional information.
+ *
+ * @throws {Error} If there is an error during the creation process.
+ */
 const createUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_schema_1.default.create(Object.assign(Object.assign({}, data), { active: true }));
+    const result = yield user_schema_1.default.create(Object.assign({}, data));
     return result;
 });
 exports.createUser = createUser;
+/**
+ * Checks if a user exists by their email.
+ *
+ * @param {string} email - The email of the user to check.
+ * @returns {Promise<boolean>} A promise that resolves to `true` if the user exists, otherwise `false`.
+ */
 const isUserExistByEamil = (email) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_schema_1.default.findOne({ email: email });
     if (user) {
@@ -29,55 +43,62 @@ const isUserExistByEamil = (email) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.isUserExistByEamil = isUserExistByEamil;
-const findUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_schema_1.default.findOne({ email: email });
-    return user;
-});
-exports.findUserByEmail = findUserByEmail;
-const updateRefreshToken = (id, refreshToken) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_schema_1.default.findByIdAndUpdate(id, { refreshToken }, { new: true });
-    return user;
-});
-exports.updateRefreshToken = updateRefreshToken;
-const addUserByAdmin = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    data.password = "12345";
-    const user = user_schema_1.default.create(data);
-    return user;
-});
-exports.addUserByAdmin = addUserByAdmin;
-const resetPassword = (email, newPassword) => __awaiter(void 0, void 0, void 0, function* () {
-    let user = yield user_schema_1.default.findOne({ email: email });
-    if (user) {
-        user.password = newPassword;
-        yield user.save();
-    }
-    return user;
-});
-exports.resetPassword = resetPassword;
-// export const updateUser = async (id: string, data: IUser) => {
-//     const result = await UserSchema.findOneAndUpdate({ _id: id }, data, {
-//         new: true,
-//     });
-//     return result;
-// };
-// export const editUser = async (id: string, data: Partial<IUser>) => {
-//     const result = await UserSchema.findOneAndUpdate({ _id: id }, data);
-//     return result;
-// };
-// export const deleteUser = async (id: string) => {
-//     const result = await UserSchema.deleteOne({ _id: id });
-//     return result;
-// };
-// export const getUserById = async (id: string) => {
-//     const result = await UserSchema.findById(id).lean();
-//     return result;
-// };
-// export const getAllUser = async () => {
-//     const result = await UserSchema.find({}).lean();
-//     return result;
-// };
+/**
+ * Retrieves a user by their email address.
+ *
+ * @param {string} email - The email address of the user to retrieve.
+ * @returns {Promise<any>} A promise that resolves to the user document if found, otherwise null.
+ */
 const getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_schema_1.default.findOne({ email }).lean();
     return result;
 });
 exports.getUserByEmail = getUserByEmail;
+/**
+ * Updates the refresh token for a user by their ID.
+ *
+ * @param {string} id - The ID of the user to update.
+ * @param {string} refreshToken - The new refresh token to set for the user.
+ * @returns {Promise<UserSchema | null>} - The updated user document, or null if no user was found.
+ */
+const updateRefreshToken = (id, refreshToken) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_schema_1.default.findByIdAndUpdate(id, { refreshToken }, { new: true });
+    return user;
+});
+exports.updateRefreshToken = updateRefreshToken;
+/**
+ * Retrieves a user by their ID.
+ *
+ * @param {string} id - The ID of the user to retrieve.
+ * @returns {Promise<any>} A promise that resolves to the user document if found, otherwise null.
+ */
+const getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_schema_1.default.findById(id).lean();
+    return result;
+});
+exports.getUserById = getUserById;
+/**
+ * Deletes the refresh token for a user by their user id.
+ *
+ * @param {string} id - The email address of the user to delete the refresh token for.
+ * @returns {Promise<any>} A promise that resolves to the updated user document.
+ */
+const deleteRefreshToken = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_schema_1.default.findByIdAndUpdate(id, { refreshToken: '' });
+    return user;
+});
+exports.deleteRefreshToken = deleteRefreshToken;
+/**
+ * Updates the password for a user by their ID.
+ *
+ * @param {string} userId - The ID of the user to update the password for.
+ * @param {any} data - An object containing the new password.
+ * @returns {Promise<IUser>} A promise that resolves to the updated user document.
+ *
+ * @throws {Error} If there is an error during the update process.
+ */
+const updatePassword = (userId, data) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_schema_1.default.findByIdAndUpdate(userId, { password: data.newPassword });
+    return user;
+});
+exports.updatePassword = updatePassword;

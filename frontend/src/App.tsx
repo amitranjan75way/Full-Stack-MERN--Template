@@ -3,21 +3,19 @@ import Basic from "./layouts/Basic";
 import Home from "./pages/home";
 import Register from './pages/register';
 import Login from './pages/login';
-import { useAppSelector } from "./store/store";
-import PrivateRoute from "./components/auth/PrivateRoute";
+import UpdatePassword from "./pages/updatePassword";
 
 function App() {
   
   return (
     <Routes>
       <Route element={<Basic />}>
-        {/* <Route element={<PublicRoute isAuthenticated={isAuthenticated} />}> */}
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<div>About</div>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-        {/* </Route> */}
 
+          <Route path="/update-password" element={<UpdatePassword/>} />
       </Route>
     </Routes>
   );

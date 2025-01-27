@@ -8,7 +8,7 @@
   --input-border: #ddd;
 }
 
-.loginContainer {
+.updatePasswordContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -33,13 +33,6 @@
   margin-bottom: 10px;
 }
 
-.subHeader {
-  font-size: 16px;
-  color: var(--dark-gray);
-  text-align: center;
-  margin-bottom: 20px;
-}
-
 .form {
   display: flex;
   flex-direction: column;
@@ -58,8 +51,13 @@
   color: var(--dark-gray);
 }
 
-.inputGroup input {
-  padding: 10px;
+.passwordWrapper {
+  position: relative;
+}
+
+.passwordWrapper input {
+  width: 96%;
+  padding: 10px 0 10px 10px;
   border: 1px solid var(--input-border);
   border-radius: 5px;
   font-size: 14px;
@@ -67,46 +65,47 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.inputGroup input:focus {
+.passwordWrapper input:focus {
   outline: none;
   border-color: var(--primary-orange);
   box-shadow: 0 0 5px rgba(252, 128, 25, 0.5);
 }
 
-.error {
-  font-size: 12px;
-  color: red;
+.eyeInsideInput {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
 }
 
-.loginButton {
-  background-color: var(--primary-orange);
+.updateButton {
+  background: linear-gradient(to right, var(--primary-orange), var(--secondary-orange));
   color: var(--white);
-  padding: 10px;
+  padding: 12px;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-}
-
-.loginButton:hover {
-  background-color: var(--secondary-orange);
-  transform: scale(1.02);
-}
-
-.registerLink {
+  transition: background 0.3s, transform 0.2s;
   text-align: center;
-  margin-top: 15px;
 }
 
-.registerButton {
-  color: var(--primary-orange);
-  font-weight: bold;
-  text-decoration: none;
-  cursor: pointer;
+.updateButton:hover {
+  background: linear-gradient(to right, var(--secondary-orange), var(--primary-orange));
+  transform: translateY(-2px);
 }
 
-.registerButton:hover {
-  text-decoration: underline;
+.updateButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.error {
+  font-size: 12px;
+  color: red;
 }
