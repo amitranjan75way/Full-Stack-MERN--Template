@@ -49,13 +49,12 @@ export const baseQuery = fetchBaseQuery({
 
 export const baseQueryWithReauth: BaseQueryFn<FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
-  console.log("result in basequrey", result)
-
+  console.log("result :", result?.error);
   if (result.error && result.error.status === 401) {
     // Access token expired, attempt to refresh
     const state = api.getState() as RootState;
     const refreshToken = state.auth.refreshToken;
-
+    console.log(refreshToken);
     if (refreshToken) {
       // Attempt token refresh
       const refreshResult = await refreshTokenBaseQuery(
@@ -68,15 +67,19 @@ export const baseQueryWithReauth: BaseQueryFn<FetchArgs, unknown, FetchBaseQuery
       );
 
       if ((refreshResult.data as RefreshTokenResponse)) {
-        const { accessToken: newAccessToken, refreshToken: newRefreshToken } = (
-          refreshResult.data as RefreshTokenResponse
-        );
+        // const { accessToken: newAccessToken, refreshToken: newRefreshToken } = (
+        //   refreshResult.data as RefreshTokenResponse
+        // );
+
+        console.log("new Access:", refreshResult.data.data.accessToken);
+        console.log("new Refresh:", refreshResult.data.data.refreshToken);
+        
 
         // Save new tokens in Redux state
         api.dispatch(
           setTokens({
-            accessToken: newAccessToken,
-            refreshToken: newRefreshToken,
+            accessToken: refreshResult.data.data.accessToken,
+            refreshToken: refreshResult.data.data.refreshToken,
           })
         );
 
@@ -89,6 +92,7 @@ export const baseQueryWithReauth: BaseQueryFn<FetchArgs, unknown, FetchBaseQuery
       }
     } else {
       // No refresh token available, log the user out
+     
       api.dispatch(resetTokens());
       api.dispatch(logout());
     }
