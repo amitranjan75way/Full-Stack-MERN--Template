@@ -7,7 +7,7 @@ import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store/store";
 import { logout, resetTokens, setTokens } from "../store/reducers/authReducer";
 
-const baseURL = "http://localhost:/4000/api";
+const baseURL = "http://localhost:4000/api";
 
 // Interface for the refresh token response
 interface RefreshTokenResponse {
@@ -47,12 +47,9 @@ export const baseQuery = fetchBaseQuery({
   },
 });
 
-export const baseQueryWithReauth: BaseQueryFn<
-  FetchArgs,
-  unknown,
-  FetchBaseQueryError
-> = async (args, api, extraOptions) => {
+export const baseQueryWithReauth: BaseQueryFn<FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
+  console.log("result in basequrey", result)
 
   if (result.error && result.error.status === 401) {
     // Access token expired, attempt to refresh
@@ -63,7 +60,7 @@ export const baseQueryWithReauth: BaseQueryFn<
       // Attempt token refresh
       const refreshResult = await refreshTokenBaseQuery(
         {
-          url: "refresh-token",
+          url: "/users/update-access-token",
           method: "POST",
         },
         api,

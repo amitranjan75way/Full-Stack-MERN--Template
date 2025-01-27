@@ -40,7 +40,7 @@ const UpdatePassword: React.FC = () => {
       console.log("response: ", response);
       toast.success('Password updated successfully!', { id: toastId });
     } catch (err: any) {
-      console.log("Error is : ", err);
+      console.log("Error is in update password : ", err);
       toast.error(err?.data?.message || 'Failed to update password', { id: toastId });
     }
   };

@@ -3,7 +3,7 @@ import { baseQueryWithReauth } from './api';
 
 export const userApi = createApi({
   reducerPath: 'userApi',
-  baseQuery: baseQueryWithReauth, // Use the reauth query here
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['User'],
   endpoints: (builder) => ({
     updatePassword: builder.mutation({
