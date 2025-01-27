@@ -36,7 +36,7 @@ app.use((0, morgan_1.default)("dev"));
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
     origin: process.env.BASE_URL,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
 }));
 const swagger_1 = __importDefault(require("./app/swagger/swagger"));

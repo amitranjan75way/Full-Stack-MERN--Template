@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useLoginUserMutation } from '../../services/authApi';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -8,6 +8,8 @@ import { useAppDispatch } from '../../store/store';
 import { login } from '../../store/reducers/authReducer';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { Eye, EyeOff } from 'lucide-react';
+import ButtonLoader from '../../components/buttonLoader';
 
 // Define the type for the form data
 type LoginFormData = {
@@ -22,25 +24,32 @@ const loginSchema = yup.object({
 });
 
 const LoginForm: React.FC = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
     resolver: yupResolver(loginSchema),
   });
 
-  const [loginUser, { isLoading, error }] = useLoginUserMutation();
+  const [loginUser, { isLoading }] = useLoginUserMutation();
 
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     try {
       const result = await loginUser(data).unwrap();
-      console.log('Login successful:', result.data);
-      dispatch(login({
-        name: result.data.name,
-        email: result.data.email,
-        role: result.data.role,
-        accessToken: result.data.accessToken,
-        refreshToken: result.data.refreshToken,
-      }));
+      toast.success('Login successful!');
+      dispatch(
+        login({
+          name: result.data.name,
+          email: result.data.email,
+          role: result.data.role,
+          accessToken: result.data.accessToken,
+          refreshToken: result.data.refreshToken,
+        })
+      );
       window.localStorage.setItem('name', result.data.name);
       window.localStorage.setItem('email', result.data.email);
       window.localStorage.setItem('role', result.data.role);
@@ -48,15 +57,16 @@ const LoginForm: React.FC = () => {
       window.localStorage.setItem('refreshToken', result.data.refreshToken);
       window.localStorage.setItem('isAuthenticated', 'true');
       navigate('/');
-
-      // Handle successful login, e.g., save token or redirect
     } catch (err) {
-      console.error('Login failed:', err);
-      if ((err as any)?.data?.err_code === 404) {
-        toast.error('User Not found');
-      }
-      if ((err as any)?.data?.err_code === 401) {
-        toast.error('Incorrect password');
+    
+      const errorCode = (err as any)?.data?.error_code;
+      
+      if (errorCode === 404) {
+        toast.error('User not found.');
+      } else if (errorCode === 401) {
+        toast.error('Incorrect password.');
+      } else {
+        toast.error('Something went wrong. Please try again.');
       }
     }
   };
@@ -69,28 +79,50 @@ const LoginForm: React.FC = () => {
 
         {/* Login Form */}
         <form className={style.form} onSubmit={handleSubmit(onSubmit)}>
-          <div className={style.inputGroup}>
+          <div className={`${style.inputGroup} ${errors.email ? style.errorInputGroup : ''}`}>
             <label>Enter Email</label>
-            <input type="email" {...register('email')} placeholder="Your Email" />
+            <input
+              type="email"
+              {...register('email')}
+              placeholder="Your Email"
+              className={errors.email ? style.errorInput : ''}
+            />
             {errors.email && <p className={style.error}>{errors.email.message}</p>}
           </div>
 
-          <div className={style.inputGroup}>
+          <div className={`${style.inputGroup} ${errors.password ? style.errorInputGroup : ''}`}>
             <label>Enter Password</label>
-            <input type="password" {...register('password')} placeholder="Your Password" />
+            <div className={style.passwordWrapper}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                {...register('password')}
+                placeholder="Your Password"
+                className={`${style.passwordInput} ${errors.password ? style.errorInput : ''}`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className={style.eyeIcon}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
             {errors.password && <p className={style.error}>{errors.password.message}</p>}
           </div>
 
+
           <button type="submit" className={style.loginButton} disabled={isLoading}>
-            {isLoading ? 'Logging in...' : 'Log In'}
+            {isLoading ? <ButtonLoader /> : 'Log In'}
           </button>
 
-          {/* Show error if login failed */}
-          {error && <p className={style.error}>Login failed: {error.data?.message || 'Something went wrong'}</p>}
-
-          {/* Register Button */}
+          {/* Register Link */}
           <div className={style.registerLink}>
-            <p>Don't have an account? <Link to="/register" className={style.registerButton}>Register</Link></p>
+            <p>
+              Don't have an account?{' '}
+              <Link to="/register" className={style.registerButton}>
+                Register
+              </Link>
+            </p>
           </div>
         </form>
       </div>

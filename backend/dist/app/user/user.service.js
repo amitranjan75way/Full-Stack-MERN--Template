@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updatePassword = exports.deleteRefreshToken = exports.getUserById = exports.updateRefreshToken = exports.getUserByEmail = exports.isUserExistByEamil = exports.createUser = void 0;
 const user_schema_1 = __importDefault(require("./user.schema"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 /**
  * Creates a new user.
  *
@@ -98,7 +99,8 @@ exports.deleteRefreshToken = deleteRefreshToken;
  * @throws {Error} If there is an error during the update process.
  */
 const updatePassword = (userId, data) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_schema_1.default.findByIdAndUpdate(userId, { password: data.newPassword });
+    const hashedPass = yield bcrypt_1.default.hash(data.newPassword, 12);
+    const user = yield user_schema_1.default.findByIdAndUpdate(userId, { password: hashedPass });
     return user;
 });
 exports.updatePassword = updatePassword;

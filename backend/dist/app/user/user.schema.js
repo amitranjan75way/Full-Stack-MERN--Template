@@ -52,9 +52,6 @@ const UserSchema = new mongoose_1.default.Schema({
 }, { timestamps: true });
 UserSchema.pre("save", function (next) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!this.isModified("password")) {
-            return next();
-        }
         this.password = yield hashPassword(this.password);
         next();
     });

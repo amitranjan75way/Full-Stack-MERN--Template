@@ -67,23 +67,14 @@ export const baseQueryWithReauth: BaseQueryFn<FetchArgs, unknown, FetchBaseQuery
       );
 
       if ((refreshResult.data as RefreshTokenResponse)) {
-        // const { accessToken: newAccessToken, refreshToken: newRefreshToken } = (
-        //   refreshResult.data as RefreshTokenResponse
-        // );
-
-        console.log("new Access:", refreshResult.data.data.accessToken);
-        console.log("new Refresh:", refreshResult.data.data.refreshToken);
-        
-
-        // Save new tokens in Redux state
+       
         api.dispatch(
           setTokens({
-            accessToken: refreshResult.data.data.accessToken,
-            refreshToken: refreshResult.data.data.refreshToken,
+            accessToken: (refreshResult.data as RefreshTokenResponse).data.accessToken,
+            refreshToken: (refreshResult.data as RefreshTokenResponse).data.refreshToken,
           })
         );
-
-        // Retry the original request with the new access token
+        
         result = await baseQuery(args, api, extraOptions);
       } else {
         // Refresh token failed, log the user out
