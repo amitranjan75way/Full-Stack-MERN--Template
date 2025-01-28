@@ -27,7 +27,7 @@ export const validateToken = (token: string, secret: string) => {
 export const decodeAccessToken = async (encryptedAccessToken : string) => {
   // Verify token and attach the user information to the request object
   const payload: Payload = jwt.verify(encryptedAccessToken, ACCESS_TOKEN_SECRET) as Payload;
-  
+  console.log("Payload is : ", payload)
   if (payload === null) {
       throw createHttpError(403, {
       message: "Invalid Token...",

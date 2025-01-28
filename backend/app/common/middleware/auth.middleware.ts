@@ -21,8 +21,9 @@ export const auth = asyncHandler(async (req: Request, res: Response, next: NextF
         message: "Token is required for authentication",
       });
     }
-
-    const user: Payload = await decodeAccessToken(token);
+    
+    const user = await decodeAccessToken(token);
+    console.log("auth payload : ", user)
     if (!user) {
       throw createHttpError(401, {
         message: "Invalid or expired token",
