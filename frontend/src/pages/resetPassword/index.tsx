@@ -91,5 +91,4 @@ const ResetPassword: React.FC = () => {
     </motion.div>
   );
 };
-
 export default ResetPassword;
