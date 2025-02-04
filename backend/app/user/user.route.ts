@@ -12,7 +12,9 @@ router
         .post('/update-access-token', catchError, userController.updateAccessToken)
         .post('/login', userValidator.loginUser, catchError, userController.loginUser)
         .post('/logout',authMiddlerware.auth, catchError, userController.logout)
-        .patch('/update-password', authMiddlerware.auth, userValidator.updatePassword, userController.updatePassword);
+        .post('/send-password-reset-link', userValidator.forgotPassword, userController.forgotPasswordSendToken)
+        .post('/reset-password/:token', userValidator.resetPassword, catchError, userController.resetPassword)
+        .patch('/update-password', authMiddlerware.auth, userValidator.updatePassword, catchError, userController.updatePassword);
         
 export default router;
 

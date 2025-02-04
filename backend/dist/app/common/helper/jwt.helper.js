@@ -40,6 +40,7 @@ exports.validateToken = validateToken;
 const decodeAccessToken = (encryptedAccessToken) => __awaiter(void 0, void 0, void 0, function* () {
     // Verify token and attach the user information to the request object
     const payload = jsonwebtoken_1.default.verify(encryptedAccessToken, ACCESS_TOKEN_SECRET);
+    console.log("Payload is : ", payload);
     if (payload === null) {
         throw (0, http_errors_1.default)(403, {
             message: "Invalid Token...",

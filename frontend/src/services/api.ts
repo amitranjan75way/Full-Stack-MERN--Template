@@ -49,12 +49,10 @@ export const baseQuery = fetchBaseQuery({
 
 export const baseQueryWithReauth: BaseQueryFn<FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
-  console.log("result :", result?.error);
   if (result.error && result.error.status === 401) {
     // Access token expired, attempt to refresh
     const state = api.getState() as RootState;
     const refreshToken = state.auth.refreshToken;
-    console.log(refreshToken);
     if (refreshToken) {
       // Attempt token refresh
       const refreshResult = await refreshTokenBaseQuery(

@@ -1,4 +1,5 @@
 
+import { sendEmail } from "../common/services/email.service";
 import { type IUser } from "./user.dto";
 import UserSchema from "./user.schema";
 import bcrypt from 'bcrypt';
@@ -101,3 +102,7 @@ export const updatePassword = async(userId: string, data: any) => {
     const user = await UserSchema.findByIdAndUpdate(userId, {password: hashedPass});
     return user as IUser;
 }
+
+// export const forgotPasswordTokenSend = async(email: string) => {
+//     await sendEmail
+// }

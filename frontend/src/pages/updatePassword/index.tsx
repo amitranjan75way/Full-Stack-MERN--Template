@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -8,12 +9,12 @@ import { useUpdatePasswordMutation } from '../../services/userApi';
 import ButtonLoader from '../../components/buttonLoader';
 import style from './index.module.css';
 
-// Form validation schema using Yup
+// Validation schema using Yup
 const validationSchema = Yup.object().shape({
   oldPassword: Yup.string().required('Old Password is required'),
   newPassword: Yup.string()
     .required('New Password is required')
-    .min(2, 'New Password must be at least 2 characters'),
+    .min(6, 'New Password must be at least 6 characters'),
 });
 
 // Define the form data type
@@ -22,7 +23,7 @@ type UpdatePasswordFormData = {
   newPassword: string;
 };
 
-const   UpdatePassword: React.FC = () => {
+const UpdatePassword: React.FC = () => {
   const { register, handleSubmit, formState: { errors, isDirty } } = useForm<UpdatePasswordFormData>({
     resolver: yupResolver(validationSchema),
   });
@@ -33,21 +34,23 @@ const   UpdatePassword: React.FC = () => {
   const [updatePassword, { isLoading }] = useUpdatePasswordMutation();
 
   const onSubmit: SubmitHandler<UpdatePasswordFormData> = async (data) => {
-    console.log("this is data", data);
     const toastId = toast.loading('Updating password...');
     try {
       const response = await updatePassword(data).unwrap();
-      console.log("response: ", response);
       toast.success('Password updated successfully!', { id: toastId });
     } catch (err: any) {
-      console.log("Error is in update password : ", err);
       toast.error(err?.data?.message || 'Failed to update password', { id: toastId });
     }
   };
 
   return (
     <div className={style.updatePasswordContainer}>
-      <div className={style.formWrapper}>
+      <motion.div
+        className={style.formWrapper}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+      >
         <h1 className={style.header}>Update Password</h1>
 
         <form className={style.form} onSubmit={handleSubmit(onSubmit)}>
@@ -92,15 +95,17 @@ const   UpdatePassword: React.FC = () => {
           </div>
 
           {/* Submit Button */}
-          <button
+          <motion.button
             type="submit"
             className={style.updateButton}
             disabled={!isDirty || isLoading}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             {isLoading ? <ButtonLoader /> : 'Update Password'}
-          </button>
+          </motion.button>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../store/store';
 import { logout } from '../../store/reducers/authReducer';
 import { useLogoutUserMutation } from '../../services/userApi';
 import { ThemeContext } from '../../context/ThemeContext';
+import toast from 'react-hot-toast';
 
 const Header = () => {
   const authData = useAppSelector((store) => store.auth);
@@ -31,11 +32,12 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await logoutUser();
+      await logoutUser({});
       localStorage.clear();
       dispatch(logout());
       navigate('/');
     } catch (error) {
+      toast.error("something went wrong...")
       console.log(error);
     }
   };

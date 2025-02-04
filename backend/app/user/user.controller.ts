@@ -10,11 +10,13 @@ import { sendEmail } from "../common/services/email.service";
 import { resetPasswordEmailTemplate } from "../common/template/mail.template";
 import * as jwthelper from "../common/helper/jwt.helper";
 import { loadConfig } from "../common/helper/config.hepler";
+import jwt from "jsonwebtoken";
 
 loadConfig();
 
 const ACCESS_TOKEN_SECRET: string = process.env.ACCESS_TOKEN_SECRET as string;
 const REFRESH_TOKEN_SECRET: string = process.env.REFRESH_TOKEN_SECRET as string;
+const BASE_URL: string = process.env.BASE_URL as string;
 
 /**
  * Registers a new user.
@@ -22,10 +24,13 @@ const REFRESH_TOKEN_SECRET: string = process.env.REFRESH_TOKEN_SECRET as string;
  * @param {Response} res - The response object used to send the result.
  * @throws {HttpError} If the user already exists or refresh token update fails.
  */
-export const registerUser = asyncHandler(async (req: Request, res: Response) => {
+export const registerUser = asyncHandler(
+  async (req: Request, res: Response) => {
     const data: IUser = req.body;
 
-    const isUserExist: boolean = await userService.isUserExistByEamil(data.email);
+    const isUserExist: boolean = await userService.isUserExistByEamil(
+      data.email
+    );
     if (isUserExist) {
       throw createHttpError(409, "User already Exits");
     }
@@ -39,11 +44,16 @@ export const registerUser = asyncHandler(async (req: Request, res: Response) => 
       role: result.role,
     };
     const { refreshToken, accessToken } = jwthelper.generateTokens(payload);
-    
-    
-    const user: IUser = await userService.updateRefreshToken(result._id, refreshToken);
+
+    const user: IUser = await userService.updateRefreshToken(
+      result._id,
+      refreshToken
+    );
     if (!user) {
-      throw createHttpError(500, "Failed to update refresh token, Login to continue");
+      throw createHttpError(
+        500,
+        "Failed to update refresh token, Login to continue"
+      );
     }
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
@@ -61,9 +71,9 @@ export const registerUser = asyncHandler(async (req: Request, res: Response) => 
       email: user.email,
       role: user.role,
       refreshToken,
-      accessToken
-    } 
-    
+      accessToken,
+    };
+
     res.send(createResponse(response, "User Registered Successfully"));
   }
 );
@@ -115,10 +125,9 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
       email: user.email,
       role: user.role,
       refreshToken,
-      accessToken
-    }
+      accessToken,
+    };
     res.send(createResponse(response, "User logged in successfully"));
-
   } else {
     throw createHttpError(401, "wrong password | Unauthorised access");
   }
@@ -147,8 +156,10 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
  * @param {Response} res - The response object used to send the result.
  * @throws {HttpError} If the refresh token is not found, invalid, or the user is not found.
  */
-export const updateAccessToken = asyncHandler(async (req: Request, res: Response) => {
-    const refreshToken = req.cookies.refreshToken || req.headers.authorization?.split(" ")[1];
+export const updateAccessToken = asyncHandler(
+  async (req: Request, res: Response) => {
+    const refreshToken =
+      req.cookies.refreshToken || req.headers.authorization?.split(" ")[1];
     if (!refreshToken) {
       throw createHttpError(401, "Refresh token not found");
     }
@@ -184,13 +195,12 @@ export const updateAccessToken = asyncHandler(async (req: Request, res: Response
       email: user.email,
       role: user.role,
       refreshToken,
-      accessToken
-    }
+      accessToken,
+    };
 
     res.send(createResponse(response, "Access token updated successfully"));
   }
 );
-
 
 /**
  * Change the password of the authenticated user.
@@ -201,24 +211,68 @@ export const updateAccessToken = asyncHandler(async (req: Request, res: Response
  * @throws {createHttpError} 401 - If the old password is incorrect.
  * @returns {Promise<void>} - Sends a response indicating the password update status.
  */
-export const updatePassword = asyncHandler(async(req: Request, res: Response)=>{
-  const user = req.user;
-  if (!user) {
-    throw createHttpError(404, "User not found, please login again");
-  }
-  const isUser = await userService.getUserById(user._id);
-  if(!isUser) {
-    throw createHttpError(404, "User not found, please login again");
-  }
-  const data = req.body;
+export const updatePassword = asyncHandler(
+  async (req: Request, res: Response) => {
+    const user = req.user;
+    if (!user) {
+      throw createHttpError(404, "User not found, please login again");
+    }
+    const isUser = await userService.getUserById(user._id);
+    if (!isUser) {
+      throw createHttpError(404, "User not found, please login again");
+    }
+    const data = req.body;
 
-  if(await bcrypt.compare(data.oldPassword, isUser.password)) {
-    const updatedUser = await userService.updatePassword(user._id, data);
-  } else {
-    throw createHttpError(401, "Incorrect old password, unauthorised access")
+    if (await bcrypt.compare(data.oldPassword, isUser.password)) {
+      const updatedUser = await userService.updatePassword(user._id, data);
+    } else {
+      throw createHttpError(401, "Incorrect old password, unauthorised access");
+    }
+
+    res.send(createResponse(200, "Password updated successfully"));
   }
-  
-  res.send(createResponse(200, "Password updated successfully"));
-});
+);
 
+export const forgotPasswordSendToken = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { email } = req.body;
 
+    const user = await userService.getUserByEmail(email);
+    if (!user) {
+      throw createHttpError(404, "User not exists");
+    }
+
+    // Generate JWT for password reset, setting expiration time (e.g., 1 hour)
+    const resetToken = await jwthelper.generatePasswordRestToken(user._id);
+
+    const resetLink = `${BASE_URL}/reset-password/${resetToken}`;
+    const emailContent = resetPasswordEmailTemplate(resetLink);
+
+    await sendEmail({
+      to: email,
+      subject: "Password reset Link",
+      html: emailContent,
+    });
+
+    res.send(
+      createResponse(resetLink, "Reset password Link send successfully")
+    );
+  }
+);
+
+export const resetPassword = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    const { valid, decoded } = await jwthelper.verifyResetPasswordToken(token as string);
+    if (!valid || !decoded) {
+      throw createHttpError(401, "Link is expired or invalid...");
+    }
+    
+    
+    const user = await userService.updatePassword((decoded as any).userId, {newPassword: newPassword});
+
+    res.send(createResponse(200, "Password reset successfully"));
+  }
+);

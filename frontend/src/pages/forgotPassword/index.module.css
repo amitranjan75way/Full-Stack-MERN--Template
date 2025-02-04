@@ -1,0 +1,98 @@
+.forgotPasswordContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--background-color);
+}
+
+.formWrapper {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background-color: var(--card-background);
+  border-radius: 10px;
+  box-shadow: var(--card-shadow);
+  text-align: center;
+  transition: background-color 0.3s ease-in-out;
+  border: 1px solid var(--border-color);
+}
+
+.header {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.subHeader {
+  color: var(--secondary-text-color);
+  margin-bottom: 1rem;
+}
+
+.inputGroup {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+input {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid var(--input-border);
+  border-radius: 5px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out, transform 0.2s;
+}
+
+.submitButton:hover {
+  transform: translateY(-2px);
+}
+
+.submitButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.loginLink {
+  margin-top: 1rem;
+}
+
+.loginButton {
+  color: var(--primary-color);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.loginButton:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}

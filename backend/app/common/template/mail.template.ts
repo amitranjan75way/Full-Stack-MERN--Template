@@ -80,14 +80,14 @@ export const resetPasswordEmailTemplate = (token = ""): string => `
       <p>Hi there,</p>
       <p>We received a request to reset your password for your account. If you made this request, please click the button below to reset your password:</p>
       <div class="button-container">
-        <a href="${process.env.FE_BASE_URL}/reset-password?token=${token}" class="button">Reset Password</a>
+        <a href="${token}" class="button">Reset Password</a>
       </div>
       <p>If you didn't request a password reset, please ignore this email or contact support if you have any questions.</p>
       <p>Thank you,<br>The App Team</p>
     </div>
     <div class="footer">
       <p>If you're having trouble clicking the button, copy and paste the link below into your web browser:</p>
-      <p><a href="${process.env.FE_BASE_URL}/reset-password?token=${token}">${process.env.FE_BASE_URL}/reset-password?token=${token}</a></p>
+      <p><a href="${token}">${token}</a></p>
     </div>
   </div>
 </body>

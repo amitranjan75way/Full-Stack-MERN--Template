@@ -17,6 +17,8 @@ import PublicRoute from "./components/auth/PublicRoutes";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import NotFound from "./pages/notfound";
 import { ThemeContexProvider } from './context/ThemeContext';
+import ForgotPassword from "./pages/forgotPassword";
+import ResetPassword from "./pages/resetPassword";
 
 
 function App() {
@@ -42,6 +44,8 @@ function App() {
         <Route element={<PublicRoute isAuthenticated={isAuthenticated} />} >
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword/>} />
+          <Route path="/reset-password/:token" element={<ResetPassword/>} />
         </Route>
 
         {/* Private Routes */}

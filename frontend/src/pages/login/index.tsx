@@ -112,6 +112,16 @@ const LoginForm: React.FC = () => {
               </button>
             </div>
             {errors.password && <p className={style.error}>{errors.password.message}</p>}
+
+            {/* Forgot Password Link */}
+            <motion.div
+              className={style.forgotPassword}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <Link to="/forgot-password">Forgot Password?</Link>
+            </motion.div>
           </div>
 
           <button type="submit" className={style.loginButton} disabled={isLoading}>

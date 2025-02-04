@@ -51,7 +51,7 @@
 }
 
 .inputGroup input {
-  width: 97%;
+  width: 100%;
   padding: 10px 0 10px 10px;
   border: 1px solid var(--input-border);
   border-radius: 5px;
@@ -155,5 +155,22 @@
 }
 
 .registerButton:hover {
+  text-decoration: underline;
+}
+
+.forgotPassword {
+  text-align: right;
+  margin-top: 5px;
+}
+
+.forgotPassword a {
+  color: var(--primary-color);
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+}
+
+.forgotPassword a:hover {
+  color: var(--secondary-color);
   text-decoration: underline;
 }

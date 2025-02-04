@@ -34,7 +34,6 @@ export const authSlice = createSlice({
       state,
       action: PayloadAction<{ accessToken: string; refreshToken: string }>
     ) => {
-      console.log("action.paload: ", action.payload)
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       state.isAuthenticated = true;

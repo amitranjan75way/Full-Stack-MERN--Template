@@ -30,6 +30,7 @@ exports.auth = (0, express_async_handler_1.default)((req, res, next) => __awaite
         });
     }
     const user = yield (0, jwt_helper_1.decodeAccessToken)(token);
+    console.log("auth payload : ", user);
     if (!user) {
         throw (0, http_errors_1.default)(401, {
             message: "Invalid or expired token",
