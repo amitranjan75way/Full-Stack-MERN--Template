@@ -1,3 +1,10 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 /* Global CSS with root variables for dark and light mode */
 :root {
   --background-color: #ffffff; /* Light mode background */

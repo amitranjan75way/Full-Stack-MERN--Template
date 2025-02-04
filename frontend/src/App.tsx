@@ -32,32 +32,30 @@ function App() {
   }, [authData]);
 
   return (
-    <ErrorBoundary>
-      <ThemeContexProvider>
-        <Routes>
-          <Route element={<Basic />}>
-            {/* Home page ... */}
-            <Route path="/" element={<Home />} />
 
-            {/* Public Routes */}
-            <Route element={<PublicRoute isAuthenticated={isAuthenticated} />} >
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-            </Route>
+    <Routes>
+      <Route element={<Basic />}>
+        {/* Home page ... */}
+        <Route path="/" element={<Home />} />
 
-            {/* Private Routes */}
-            <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
-              <Route path="/update-password" element={<UpdatePassword />} />
-            </Route>
+        {/* Public Routes */}
+        <Route element={<PublicRoute isAuthenticated={isAuthenticated} />} >
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
+
+        {/* Private Routes */}
+        <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
+          <Route path="/update-password" element={<UpdatePassword />} />
+        </Route>
 
 
-            {/* Catch-All Route (404 Page) */}
-            <Route path="*" element={<NotFound />} />
+        {/* Catch-All Route (404 Page) */}
+        <Route path="*" element={<NotFound />} />
 
-          </Route>
-        </Routes>
-      </ThemeContexProvider>
-    </ErrorBoundary>
+      </Route>
+    </Routes>
+
   );
 }
 
