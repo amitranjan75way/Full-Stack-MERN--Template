@@ -95,7 +95,7 @@ const Header = () => {
                 animate={{ opacity: 1, y: 0 }} 
                 transition={{ duration: 0.3 }}
               >
-                <button onClick={() => navigate('/profile')}>Profile</button>
+                <button onClick={() => navigate('/dashboard')}>Dashboard</button>
                 <button onClick={() => navigate('/settings')}>Settings</button>
                 <button onClick={handleLogout}>Logout</button>
               </motion.div>

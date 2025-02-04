@@ -19,6 +19,8 @@ import NotFound from "./pages/notfound";
 import { ThemeContexProvider } from './context/ThemeContext';
 import ForgotPassword from "./pages/forgotPassword";
 import ResetPassword from "./pages/resetPassword";
+import Dashboard from "./pages/dashboard";
+import Layout from "./layouts/sidebar/Layout";
 
 
 function App() {
@@ -44,13 +46,22 @@ function App() {
         <Route element={<PublicRoute isAuthenticated={isAuthenticated} />} >
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword/>} />
-          <Route path="/reset-password/:token" element={<ResetPassword/>} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Route>
+
 
         {/* Private Routes */}
         <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
           <Route path="/update-password" element={<UpdatePassword />} />
+          
+          <Route path="/dashboard" element={<Layout/>}>
+            <Route path="profile" element={<h1>This is profile</h1>} />
+            <Route path="settings" element={<h1>This is setting</h1>} />
+            <Route path="notifications" element={<h1>This is notificatin</h1>} />
+            {/* Add more routes here */}
+          </Route>
+
         </Route>
 
 
