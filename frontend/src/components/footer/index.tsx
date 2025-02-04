@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styles from './index.module.css';
-import logo from '../../accets/logo.jpg';
+import logo from '../../../public/assets/logo.jpg';
 
 const Footer: React.FC = () => {
   return (
@@ -8,22 +9,22 @@ const Footer: React.FC = () => {
       <div className={styles.container}>
         <div className={styles.logoContainer}>
           <div className={styles.logo}>
-            <img src={logo} alt="Logo Here" className={styles.footerlogo}/>
+            {/* <img src={logo} alt="Logo Here" className={styles.footerlogo} /> */}
           </div>
-          <span className={styles.appName}>Food Delivery App</span>
+          <span className={styles.appName}>My App</span>
         </div>
         <nav className={styles.nav}>
           <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><Link to="#home">Home</Link></li>
+            <li><Link to="#about">About</Link></li>
+            <li><Link to="#services">Services</Link></li>
+            <li><Link to="#contact">Contact</Link></li>
           </ul>
         </nav>
         <div className={styles.socials}>
-          <a href="#facebook" className={styles.icon}>Facebook</a>
-          <a href="#twitter" className={styles.icon}>Twitter</a>
-          <a href="#instagram" className={styles.icon}>Instagram</a>
+          <Link to="#facebook" className={styles.icon}>Facebook</Link>
+          <Link to="#twitter" className={styles.icon}>Twitter</Link>
+          <Link to="#instagram" className={styles.icon}>Instagram</Link>
         </div>
       </div>
       <div className={styles.copy}>

@@ -1,41 +1,33 @@
-:root {
-  --primary-orange: #fc8019;
-  --secondary-orange: #ff914d;
-  --gray: #f5f5f5;
-  --dark-gray: #333;
-  --white: #fff;
-  --black: #000;
-  --input-border: #ddd;
-}
-
+/* Login Page-specific Styles */
 .loginContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: var(--gray);
+  background-color: var(--background-color);
 }
 
 .formWrapper {
   width: 100%;
   max-width: 400px;
   padding: 20px;
-  background-color: var(--white);
+  background-color: var(--card-background);
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px var(--card-shadow); /* Darker shadow in dark mode */
+  border: 1px solid var(--border-color); /* Border color for dark mode */
 }
 
 .header {
   font-size: 28px;
   font-weight: bold;
-  color: var(--primary-orange);
+  color: var(--primary-color);
   text-align: center;
   margin-bottom: 10px;
 }
 
 .subHeader {
   font-size: 16px;
-  color: var(--dark-gray);
+  color: var(--secondary-text-color);
   text-align: center;
   margin-bottom: 20px;
 }
@@ -55,7 +47,7 @@
 .inputGroup label {
   font-size: 14px;
   font-weight: bold;
-  color: var(--dark-gray);
+  color: var(--text-color);
 }
 
 .inputGroup input {
@@ -64,13 +56,14 @@
   border: 1px solid var(--input-border);
   border-radius: 5px;
   font-size: 14px;
-  color: var(--dark-gray);
+  color: var(--text-color);
+  background-color: var(--background-color); /* Input background */
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .inputGroup input:focus {
   outline: none;
-  border-color: var(--primary-orange);
+  border-color: var(--primary-color);
   box-shadow: 0 0 5px rgba(252, 128, 25, 0.5);
 }
 
@@ -83,17 +76,18 @@
 .passwordInput {
   width: 100%;
   padding: 10px;
-  padding-right: 40px; 
+  padding-right: 40px;
   border: 1px solid var(--input-border);
   border-radius: 5px;
   font-size: 14px;
-  color: var(--dark-gray);
+  color: var(--text-color);
+  background-color: var(--background-color);
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .passwordInput:focus {
   outline: none;
-  border-color: var(--primary-orange);
+  border-color: var(--primary-color);
   box-shadow: 0 0 5px rgba(252, 128, 25, 0.5);
 }
 
@@ -103,14 +97,14 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--dark-gray);
+  color: var(--text-color);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .eyeIcon:hover {
-  color: var(--primary-orange);
+  color: var(--primary-color);
 }
 
 .error {
@@ -127,7 +121,7 @@
 }
 
 .loginButton {
-  background-color: var(--primary-orange);
+  background-color: var(--primary-color);
   color: var(--white);
   padding: 10px;
   border: none;
@@ -139,7 +133,7 @@
 }
 
 .loginButton:hover {
-  background-color: var(--secondary-orange);
+  background-color: var(--secondary-color);
   transform: scale(1.02);
 }
 
@@ -154,7 +148,7 @@
 }
 
 .registerButton {
-  color: var(--primary-orange);
+  color: var(--primary-color);
   font-weight: bold;
   text-decoration: none;
   cursor: pointer;

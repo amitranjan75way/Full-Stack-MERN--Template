@@ -3,8 +3,8 @@ import { Navigate, Outlet } from "react-router-dom";
 
 interface RoleAuthProps {
   isAuthenticated: boolean;
-  userRoles: string[]; // User's roles (e.g., ['admin', 'user'])
-  allowedRoles: string[]; // Roles allowed to access this route
+  userRoles: string[];
+  allowedRoles: string[]; 
   redirectPath?: string;
 }
 
@@ -12,7 +12,7 @@ const RoleAuthRoute: React.FC<RoleAuthProps> = ({
   isAuthenticated,
   userRoles,
   allowedRoles,
-  redirectPath = "/unauthorized", // Default redirect path for unauthorized users
+  redirectPath = "/unauthorized",
 }) => {
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

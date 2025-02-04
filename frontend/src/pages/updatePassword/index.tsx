@@ -22,7 +22,7 @@ type UpdatePasswordFormData = {
   newPassword: string;
 };
 
-const UpdatePassword: React.FC = () => {
+const   UpdatePassword: React.FC = () => {
   const { register, handleSubmit, formState: { errors, isDirty } } = useForm<UpdatePasswordFormData>({
     resolver: yupResolver(validationSchema),
   });

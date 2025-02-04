@@ -1,18 +1,10 @@
-:root {
-  --primary-orange: #fc8019;
-  --secondary-orange: #ff914d;
-  --gray: #f5f5f5;
-  --dark-gray: #333;
-  --white: #fff;
-  --input-border: #ddd;
-}
-
+/* Signup Page-specific Styles */
 .signupContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: var(--gray);
+  background-color: var(--background-color); /* Uses global background color */
   padding: 20px;
 }
 
@@ -20,7 +12,7 @@
   max-width: 450px;
   width: 100%;
   padding: 30px;
-  background: var(--white);
+  background-color: var(--card-background);
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -29,17 +21,17 @@
   font-size: 24px;
   font-weight: bold;
   text-align: center;
-  color: var(--dark-gray);
+  color: var(--text-color); /* Global text color */
 }
 
 .brandName {
-  color: var(--primary-orange);
+  color: var(--primary-color); /* Global primary color */
 }
 
 .subHeader {
   font-size: 16px;
   text-align: center;
-  color: var(--dark-gray);
+  color: var(--secondary-text-color); /* Global secondary text color */
   margin-bottom: 20px;
 }
 
@@ -52,35 +44,27 @@
 .inputGroup, .role {
   display: flex;
   flex-direction: column;
-
 }
 
 .inputGroup input, .role input, .dropdown {
   padding: 10px 20px;
+  border: 1px solid var(--input-border); /* Global input border */
+  border-radius: 5px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+  background-color: var(--background-color);
 }
 
 .inputGroup label {
   font-weight: bold;
-  color: var(--dark-gray);
+  color: var(--text-color); /* Global text color */
   margin-bottom: 5px;
-}
-
-.inputGroup input,
-.passwordWrapper input,
-.dropdown,
-.registerButton {
-  /* width: 100%;
-  padding: 10px; */
-  font-size: 14px;
-  border: 1px solid var(--input-border);
-  border-radius: 5px;
-  transition: border-color 0.3s ease;
 }
 
 .inputGroup input:focus,
 .passwordWrapper input:focus,
 .dropdown:focus {
-  border-color: var(--primary-orange);
+  border-color: var(--primary-color); /* Global primary color */
   outline: none;
 }
 
@@ -100,17 +84,18 @@
   position: absolute;
   right: 10px;
   cursor: pointer;
-  color: var(--dark-gray);
+  color: var(--text-color); /* Global text color */
 }
 
 .dropdown {
-  background-color: var(--white);
+  background-color: var(--background-color);
+  color: var(--text-color);
   cursor: pointer;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .dropdown:hover {
-  border-color: var(--primary-orange);
+  border-color: var(--primary-color); /* Global primary color */
 }
 
 .error {
@@ -123,8 +108,8 @@
   padding: 12px;
   font-size: 16px;
   font-weight: bold;
-  color: var(--white);
-  background-color: var(--primary-orange);
+  color: var(--white); /* Global white color */
+  background-color: var(--primary-color); /* Global primary color */
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -132,12 +117,12 @@
 }
 
 .registerButton:hover {
-  background-color: var(--secondary-orange);
+  background-color: var(--secondary-color); /* Global secondary color */
   transform: scale(1.02);
 }
 
 .loginButton {
-  color: var(--primary-orange);
+  color: var(--primary-color); /* Global primary color */
   font-weight: bold;
   text-decoration: none;
   cursor: pointer;

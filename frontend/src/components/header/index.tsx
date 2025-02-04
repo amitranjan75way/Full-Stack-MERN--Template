@@ -1,68 +1,117 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import style from './index.module.css';
-import logo from '../../accets/logo.jpg';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../store/store';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../store/store';
 import { logout } from '../../store/reducers/authReducer';
 import { useLogoutUserMutation } from '../../services/userApi';
+import { ThemeContext } from '../../context/ThemeContext';
 
 const Header = () => {
-  const [logoutUser, { isLoading }] = useLogoutUserMutation();
+  const authData = useAppSelector((store) => store.auth);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    setIsAuthenticated(authData.isAuthenticated || false);
+  }, [authData]);
+
+  const [logoutUser] = useLogoutUserMutation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { isAuthenticated, name } = useAppSelector((store) => store.auth);
 
-  const handleLogout = async() => {
+  // Access theme context
+  const themeContext = useContext(ThemeContext);
+  if (!themeContext) {
+    throw new Error('ThemeContext must be used within a ThemeProvider');
+  }
+  const { theme, toggleTheme } = themeContext;
+
+  // Profile dropdown state
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const handleLogout = async () => {
     try {
-      const response = await logoutUser();
-      console.log("User logout", response)
-      window.localStorage.removeItem('name');
-      window.localStorage.removeItem('email');
-      window.localStorage.removeItem('role');
-      window.localStorage.removeItem('accessToken');
-      window.localStorage.removeItem('refreshToken');
-      window.localStorage.removeItem('isAuthenticated');
-  
+      await logoutUser();
+      localStorage.clear();
       dispatch(logout());
       navigate('/');
-      console.log(response);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-   
   };
 
   return (
-    <header className={style.header}>
-      <div className={style.logo} onClick={() => navigate('/')}>
-        <img src={logo} alt="FApp Logo" />
+    <motion.header 
+      className={style.header}
+      initial={{ opacity: 0, y: -20 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      transition={{ duration: 0.5 }}
+    >
+      {/* Logo Section */}
+      <motion.div 
+        className={style.logo} 
+        onClick={() => navigate('/')}
+        initial={{ x: -50, opacity: 0 }} 
+        animate={{ x: 0, opacity: 1 }} 
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+      >
         <h1>My App</h1>
-      </div>
-      <nav className={style.nav}>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/menu">Menu</Link></li>
-          <li><Link to="/about">About</Link></li>
-          <li><Link to="/contact">Contact</Link></li>
-        </ul>
-      </nav>
+      </motion.div>
+
+      {/* Right Side: Theme Toggle & Profile/Auth */}
       <div className={style.actions}>
+        {/* Theme Toggle Button */}
+        <motion.button 
+          onClick={toggleTheme} 
+          className={style.themeToggle}
+          initial={{ scale: 0.8, opacity: 0 }} 
+          animate={{ scale: 1, opacity: 1 }} 
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          {theme === 'light' ? '🌙' : '☀️'}
+        </motion.button>
+
+        {/* Conditional Rendering for Authenticated Users */}
         {isAuthenticated ? (
-          <>
-            <div className={style.profile} onClick={() => navigate('/profile')}>
-              <span className={style.userName}>{name}</span>
-              <i className="fas fa-user-circle" style={{ fontSize: '20px', marginLeft: '5px' }}></i>
+          <motion.div 
+            className={style.profileWrapper}
+            initial={{ x: 50, opacity: 0 }} 
+            animate={{ x: 0, opacity: 1 }} 
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+          >
+            <div 
+              className={style.profileIcon} 
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
+              <span>A</span>
             </div>
-            <button className={style.logout} onClick={handleLogout}>Logout</button>
-          </>
+
+            {showDropdown && (
+              <motion.div 
+                className={style.dropdownMenu}
+                initial={{ opacity: 0, y: -10 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ duration: 0.3 }}
+              >
+                <button onClick={() => navigate('/profile')}>Profile</button>
+                <button onClick={() => navigate('/settings')}>Settings</button>
+                <button onClick={handleLogout}>Logout</button>
+              </motion.div>
+            )}
+          </motion.div>
         ) : (
-          <>
-            <button className={style.login} onClick={() => navigate('/login')}>Login</button>
-            <button className={style.signup} onClick={() => navigate('/register')}>Sign Up</button>
-          </>
+          <motion.div 
+            className={style.authButtons}
+            initial={{ x: 50, opacity: 0 }} 
+            animate={{ x: 0, opacity: 1 }} 
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+          >
+            <button onClick={() => navigate('/login')}>Login</button>
+            <button onClick={() => navigate('/register')}>Signup</button>
+          </motion.div>
         )}
       </div>
-    </header>
+    </motion.header>
   );
 };
 

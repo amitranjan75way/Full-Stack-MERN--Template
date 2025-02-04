@@ -10,6 +10,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Eye, EyeOff } from 'lucide-react';
 import ButtonLoader from '../../components/buttonLoader';
+import { motion } from 'framer-motion';
 
 // Define the type for the form data
 type LoginFormData = {
@@ -58,9 +59,7 @@ const LoginForm: React.FC = () => {
       window.localStorage.setItem('isAuthenticated', 'true');
       navigate('/');
     } catch (err) {
-    
       const errorCode = (err as any)?.data?.error_code;
-      
       if (errorCode === 404) {
         toast.error('User not found.');
       } else if (errorCode === 401) {
@@ -73,7 +72,12 @@ const LoginForm: React.FC = () => {
 
   return (
     <div className={style.loginContainer}>
-      <div className={style.formWrapper}>
+      <motion.div
+        className={style.formWrapper}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+      >
         <h1 className={style.header}>Welcome Back!</h1>
         <p className={style.subHeader}>Log in to continue</p>
 
@@ -110,7 +114,6 @@ const LoginForm: React.FC = () => {
             {errors.password && <p className={style.error}>{errors.password.message}</p>}
           </div>
 
-
           <button type="submit" className={style.loginButton} disabled={isLoading}>
             {isLoading ? <ButtonLoader /> : 'Log In'}
           </button>
@@ -125,7 +128,7 @@ const LoginForm: React.FC = () => {
             </p>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };

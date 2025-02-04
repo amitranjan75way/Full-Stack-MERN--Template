@@ -1,0 +1,31 @@
+.container {
+  text-align: center;
+  padding: 50px;
+  min-height: 50vh;
+}
+
+.notfound {
+  font-size: 36px;
+  color: #ff4c4c;
+}
+
+.notfoundPara {
+  font-size: 18px;
+  color: #555;
+}
+
+.homeButton {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  text-decoration: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.homeButton:hover {
+  background-color: #0056b3;
+}

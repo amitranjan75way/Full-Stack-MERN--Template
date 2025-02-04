@@ -1,0 +1,46 @@
+/* Global CSS with root variables for dark and light mode */
+:root {
+  --background-color: #ffffff; /* Light mode background */
+  --text-color: #212529; /* Light mode primary text */
+  --secondary-text-color: #5a5a5a; /* Light mode secondary text */
+  --primary-color: #007bff; /* Primary button color */
+  --secondary-color: #6c757d; /* Secondary button color */
+  --border-color: #dddddd; /* Border color */
+  --input-border: #cccccc; /* Input field border */
+  --link-hover: #0056b3; /* Link hover color */
+}
+
+[data-theme="dark"] {
+  --background-color: #121212; /* Dark mode background */
+  --text-color: #e0e0e0; /* Dark mode primary text */
+  --secondary-text-color: #b0b0b0; /* Dark mode secondary text */
+  --primary-color: #1e90ff; /* Primary button color */
+  --secondary-color: #495057; /* Secondary button color */
+  --border-color: #333333; /* Dark border color */
+  --input-border: #555555; /* Input field border */
+  --link-hover: #4ea8de; /* Link hover color */
+  --card-background: #333333; /* Dark background for cards */
+  --card-shadow: rgba(0, 0, 0, 0.7); /* Darker shadow for contrast */
+}
+
+/* Body styling */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: Arial, sans-serif;
+}
+
+/* Links */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--link-hover);
+}
+
+/* Secondary text (for muted descriptions, subtitles, etc.) */
+.secondary-text {
+  color: var(--secondary-text-color);
+}

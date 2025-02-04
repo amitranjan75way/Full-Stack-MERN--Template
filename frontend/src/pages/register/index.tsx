@@ -9,7 +9,8 @@ import toast from 'react-hot-toast';
 import ButtonLoader from '../../components/buttonLoader';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../store/store';
-import { Eye, EyeOff } from 'lucide-react'; // For password visibility toggle icons
+import { Eye, EyeOff } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 // Define the type for the form data
 type FormData = {
@@ -26,7 +27,7 @@ const schema = yup.object({
   password: yup
     .string()
     .required('Password is required')
-    .min(1, 'Password must be at least 8 characters'),
+    .min(8, 'Password must be at least 8 characters'),
   role: yup
     .string()
     .oneOf(['USER', 'ADMIN'], 'Invalid role')
@@ -70,15 +71,20 @@ const SignupForm: React.FC = () => {
       if ((err as any)?.data?.err_code === 409) {
         toast.error('User already exists');
       }
-      if((err as any)?.data?.err_code === 500) {
-        toast.error('Something went wrong')
+      if ((err as any)?.data?.err_code === 500) {
+        toast.error('Something went wrong');
       }
     }
   };
 
   return (
     <div className={style.signupContainer}>
-      <div className={style.formWrapper}>
+      <motion.div
+        className={style.formWrapper}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+      >
         <h1 className={style.header}>
           Welcome to <span className={style.brandName}>My App</span>
         </h1>
@@ -139,7 +145,7 @@ const SignupForm: React.FC = () => {
             </Link>
           </p>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };
