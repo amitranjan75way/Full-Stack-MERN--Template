@@ -37,6 +37,14 @@ const LoginForm: React.FC = () => {
   });
 
   const [loginUser, { isLoading }] = useLoginUserMutation();
+  /**
+   * Handles the form submission for the login process.
+   * 
+   * @async
+   * @param {LoginFormData} data - The form data containing the user's email and password.
+   * @returns {Promise<void>} - Resolves when the login is successful, storing user information in localStorage and navigating to the home page.
+   * @throws {Error} - Throws an error if the login process fails. Specific error messages are shown for user not found, incorrect password, or generic failure.
+   */
 
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     try {

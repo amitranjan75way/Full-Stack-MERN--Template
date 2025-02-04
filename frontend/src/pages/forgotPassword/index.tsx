@@ -29,8 +29,16 @@ const ForgotPassword: React.FC = () => {
   });
 
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
-  // const isLoading = false;
 
+
+  /**
+   * Handles form submission for the forgot password process.
+   * 
+   * @async
+   * @param {ForgotPasswordFormData} data - The form data containing the user's email.
+   * @returns {Promise<void>} - Resolves when the password reset link is sent successfully or throws an error if the process fails.
+   * @throws {Error} - Throws an error if the password reset link sending process fails.
+   */
   const onSubmit: SubmitHandler<ForgotPasswordFormData> = async (data) => {
     const toastId = toast.loading("Processing...");
     try {

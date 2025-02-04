@@ -33,6 +33,14 @@ const UpdatePassword: React.FC = () => {
 
   const [updatePassword, { isLoading }] = useUpdatePasswordMutation();
 
+  /**
+  * Handles the form submission for updating the user's password.
+  * 
+  * @async
+  * @param {UpdatePasswordFormData} data - The form data containing the old and new passwords.
+  * @returns {Promise<void>} - Resolves when the password is successfully updated and shows a success toast.
+  * @throws {Error} - Handles errors in the password update process, showing an error toast notification if the update fails.
+  */
   const onSubmit: SubmitHandler<UpdatePasswordFormData> = async (data) => {
     const toastId = toast.loading('Updating password...');
     try {

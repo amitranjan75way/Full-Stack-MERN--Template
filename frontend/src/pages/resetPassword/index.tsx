@@ -32,10 +32,18 @@ const ResetPassword: React.FC = () => {
   });
   const navigate = useNavigate();
   const { token } = useParams();
-  
+
   // Get the mutation hook to reset the password
   const [resetPassword, { isLoading, error }] = useResetPasswordMutation();
 
+  /**
+  * Handles the form submission for resetting the user's password.
+  * 
+  * @async
+  * @param {ResetPasswordFormData} data - The form data containing the user's new password and the confirmation of the password.
+  * @returns {Promise<void>} - Resolves when the password is successfully reset and redirects the user to the login page.
+  * @throws {Error} - Handles errors in the password reset process, showing a failure toast notification if the reset fails.
+  */
   const onSubmit: SubmitHandler<ResetPasswordFormData> = async (data) => {
     try {
       // Call the resetPassword mutation with token from params

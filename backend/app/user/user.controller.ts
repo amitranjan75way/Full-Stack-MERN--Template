@@ -233,6 +233,16 @@ export const updatePassword = asyncHandler(
   }
 );
 
+
+/**
+ * Generates a password reset token, sends a reset link to the user's email.
+ * 
+ * @async
+ * @param {Request} req - The request object containing the user's email in the body.
+ * @param {Response} res - The response object to send the reset link and success message.
+ * @throws {HttpError} - Throws a 404 error if the user does not exist, or a 500 error if email sending fails.
+ * @returns {Promise<void>} - Resolves when the password reset link is sent successfully.
+ */
 export const forgotPasswordSendToken = asyncHandler(
   async (req: Request, res: Response) => {
     const { email } = req.body;
@@ -260,6 +270,16 @@ export const forgotPasswordSendToken = asyncHandler(
   }
 );
 
+
+/**
+ * Verifies the password reset token and updates the user's password.
+ * 
+ * @async
+ * @param {Request} req - The request object containing the reset token in the parameters and the new password in the body.
+ * @param {Response} res - The response object to send a success message after the password reset.
+ * @throws {HttpError} - Throws a 401 error if the token is invalid or expired.
+ * @returns {Promise<void>} - Resolves when the password is reset successfully.
+ */
 export const resetPassword = asyncHandler(
   async (req: Request, res: Response) => {
     const { token } = req.params;

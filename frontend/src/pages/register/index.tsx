@@ -44,6 +44,14 @@ const SignupForm: React.FC = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false); // For toggling password visibility
+  /**
+   * Handles the form submission for user registration.
+   * 
+   * @async
+   * @param {FormData} data - The form data containing the user's name, email, password, and role.
+   * @returns {Promise<void>} - Resolves when the user is successfully registered, saving the user data to localStorage and redirecting to the home page.
+   * @throws {Error} - Handles specific errors such as user already existing (409) or server error (500), displaying appropriate toast notifications.
+   */
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
