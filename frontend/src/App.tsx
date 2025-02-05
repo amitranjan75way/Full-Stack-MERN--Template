@@ -1,5 +1,5 @@
-import { Route, Routes } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { Route, Routes } from "react-router-dom";
+import { useEffect, useState, Suspense } from "react";
 import { useAppSelector } from "./store/store";
 
 // importing layouts
@@ -10,6 +10,8 @@ import Home from "./pages/home";
 import Register from './pages/register';
 import Login from './pages/login';
 import UpdatePassword from "./pages/updatePassword";
+
+// const Login = React.lazy(()=>import('./pages/login'));
 
 // importing components
 import PublicRoute from "./components/auth/PublicRoutes";
