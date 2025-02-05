@@ -53,6 +53,12 @@ export const authSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       state.isAuthenticated = true;
+      window.localStorage.setItem('name', action.payload.name);
+      window.localStorage.setItem('email', action.payload.email);
+      window.localStorage.setItem('role', action.payload.role);
+      window.localStorage.setItem('accessToken', action.payload.accessToken);
+      window.localStorage.setItem('refreshToken', action.payload.refreshToken);
+      window.localStorage.setItem('isAuthenticated', 'true');
     },
     logout: (state) => {
       state.name = "";
@@ -61,6 +67,12 @@ export const authSlice = createSlice({
       state.accessToken = "";
       state.refreshToken = "";
       state.isAuthenticated = false;
+      window.localStorage.removeItem('name');
+      window.localStorage.removeItem('email');
+      window.localStorage.removeItem('role');
+      window.localStorage.removeItem('accessToken');
+      window.localStorage.removeItem('refreshToken');
+      window.localStorage.removeItem('isAuthenticated');
     },
   },
 });

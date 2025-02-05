@@ -56,22 +56,7 @@ const SignupForm: React.FC = () => {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       const response = await registerUser(data).unwrap();
-
-      dispatch(login({
-        name: response.data.name,
-        email: response.data.email,
-        role: response.data.role,
-        accessToken: response.data.accessToken,
-        refreshToken: response.data.refreshToken,
-      }));
-
-      window.localStorage.setItem('name', response.data.name);
-      window.localStorage.setItem('email', response.data.email);
-      window.localStorage.setItem('role', response.data.role);
-      window.localStorage.setItem('accessToken', response.data.accessToken);
-      window.localStorage.setItem('refreshToken', response.data.refreshToken);
-      window.localStorage.setItem('isAuthenticated', 'true');
-
+      dispatch(login(response.data));
       toast.success('User Registered successfully');
       reset();
       navigate('/');

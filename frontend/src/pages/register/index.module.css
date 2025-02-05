@@ -41,12 +41,15 @@
   gap: 15px;
 }
 
-.inputGroup, .role {
+.inputGroup,
+.role {
   display: flex;
   flex-direction: column;
 }
 
-.inputGroup input, .role input, .dropdown {
+.inputGroup input,
+.role input,
+.dropdown {
   padding: 10px 20px;
   border: 1px solid var(--input-border); /* Global input border */
   border-radius: 5px;
@@ -130,4 +133,86 @@
 
 .loginButton:hover {
   text-decoration: underline;
+}
+ 
+
+
+/* Register form skeleton */
+/* General Styles */
+.registerFormSkeletonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--background-color);
+}
+
+.registerFormSkeletonFormWrapper {
+  width: 100%;
+  max-width: 450px;
+  padding: 20px;
+  background-color: var(--card-background);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px var(--card-shadow);
+  border: 1px solid var(--border-color);
+}
+
+.registerFormSkeletonHeader {
+  width: 80%;
+  height: 2rem;
+  background-color: var(--skeleton-bg-light);
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.registerFormSkeletonSubHeader {
+  width: 60%;
+  height: 1rem;
+  background-color: var(--skeleton-bg-light);
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.registerFormSkeletonForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Skeleton Input Group */
+.registerFormSkeletonSkeletonInputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.registerFormSkeletonSkeletonInput {
+  width: 100%;
+  height: 2.5rem;
+  background-color: var(--skeleton-bg-light);
+  border-radius: 5px;
+}
+
+.registerFormSkeletonSkeletonButton {
+  width: 100%;
+  height: 2.5rem;
+  background-color: var(--skeleton-bg-light);
+  border-radius: 5px;
+}
+
+.registerFormSkeletonSkeletonLoginLink {
+  width: 60%;
+  height: 1rem;
+  background-color: var(--skeleton-bg-light);
+  margin-top: 20px;
+  border-radius: 8px;
+}
+
+/* Dark Mode Adaptation */
+[data-theme="dark"] .registerFormSkeletonHeader,
+[data-theme="dark"] .registerFormSkeletonSubHeader,
+[data-theme="dark"] .registerFormSkeletonSkeletonInput,
+[data-theme="dark"] .registerFormSkeletonSkeletonButton,
+[data-theme="dark"] .registerFormSkeletonSkeletonLoginLink {
+  background-color: var(--skeleton-bg-dark);
 }

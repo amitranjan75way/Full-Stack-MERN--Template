@@ -35,7 +35,6 @@ const Header = () => {
   const handleLogout = async () => {
     try {
       await logoutUser({});
-      localStorage.clear();
       dispatch(logout());
       navigate('/');
     } catch (error) {

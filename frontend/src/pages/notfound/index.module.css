@@ -29,3 +29,58 @@
 .homeButton:hover {
   background-color: #0056b3;
 }
+
+/* Not found skelton */
+/* General Styles */
+.notFoundSkeletonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--background-color);
+}
+
+.notFoundSkeletonWrapper {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  background-color: var(--card-background);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px var(--card-shadow);
+  border: 1px solid var(--border-color);
+}
+
+/* Skeleton Title */
+.notFoundSkeletonTitle {
+  width: 50%;
+  height: 2.5rem;
+  background-color: var(--skeleton-bg-light);
+  margin-bottom: 15px;
+  border-radius: 8px;
+}
+
+/* Skeleton Description */
+.notFoundSkeletonDescription {
+  width: 70%;
+  height: 1.5rem;
+  background-color: var(--skeleton-bg-light);
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+/* Skeleton Button */
+.notFoundSkeletonHomeButton {
+  width: 50%;
+  height: 2.5rem;
+  background-color: var(--skeleton-bg-light);
+  margin-top: 25px;
+  border-radius: 5px;
+}
+
+/* Dark Mode Adaptation */
+[data-theme="dark"] .notFoundSkeletonTitle,
+[data-theme="dark"] .notFoundSkeletonDescription,
+[data-theme="dark"] .notFoundSkeletonHomeButton {
+  background-color: var(--skeleton-bg-dark);
+}
+

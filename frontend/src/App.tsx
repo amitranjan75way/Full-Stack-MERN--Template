@@ -15,11 +15,20 @@ import UpdatePassword from "./pages/updatePassword";
 import PublicRoute from "./components/auth/PublicRoutes";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import NotFound from "./pages/notfound";
-import ForgotPassword from "./pages/forgotPassword";
 import ResetPassword from "./pages/resetPassword";
 import Profile from "./pages/profile";
 import Dashboard from "./layouts/Dashboard";
-import Header from "./components/header";
+import ForgotPassword from "./pages/forgotPassword";
+
+// importing skeleton lodin pages
+import ForgotPasswordSkeleton from "./pages/forgotPassword/ForgotPasswordSkeleton";
+import LoginFormSkeleton from "./pages/login/LoginSkeleton";
+import NotFoundSkeleton from "./pages/notfound/NotFoundSkeleton";
+import ProfileSkeleton from "./pages/profile/ProfileSkeleton";
+import SignupFormSkeleton from "./pages/register/RegisterFormSkeleton";
+import ResetPasswordSkeleton from "./pages/resetPassword/ResetPasswordSkeleton";
+import UpdatePasswordSkeleton from "./pages/updatePassword/UpdatePasswordSkeleton";
+
 
 
 function App() {
@@ -43,9 +52,9 @@ function App() {
 
         {/* Public Routes */}
         <Route element={<PublicRoute isAuthenticated={isAuthenticated} />} >
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/login" element={<Login/>} />
+          <Route path="/register" element={<Register/>} />
+          <Route path="/forgot-password" element={<ForgotPassword/>} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Route>
 

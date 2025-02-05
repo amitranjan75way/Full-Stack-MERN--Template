@@ -101,3 +101,100 @@
 .logoutButton:hover {
   background-color: var(--link-hover);
 }
+
+/* profile skeleton css */
+/* General Styles for Profile Skeleton */
+.profileSkeletonPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 100vh; */
+  background-color: var(--background-color);
+}
+
+.profileSkeletonCard {
+  background-color: var(--card-background);
+  color: var(--text-color);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px var(--card-shadow);
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Profile Picture Skeleton */
+.profileSkeletonPicContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.profileSkeletonPic {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  background-color: var(--skeleton-bg-light);
+  margin-bottom: 15px;
+}
+
+/* Profile Information Skeleton */
+.profileSkeletonInfoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+}
+
+.profileSkeletonName {
+  width: 70%;
+  height: 20px;
+  background-color: var(--skeleton-bg-light);
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.profileSkeletonEmail {
+  width: 60%;
+  height: 18px;
+  background-color: var(--skeleton-bg-light);
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.profileSkeletonRole {
+  width: 50%;
+  height: 16px;
+  background-color: var(--skeleton-bg-light);
+  border-radius: 8px;
+}
+
+/* Profile Action Buttons Skeleton */
+.profileSkeletonActionsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.profileSkeletonButton {
+  width: 100%;
+  height: 40px;
+  background-color: var(--skeleton-bg-light);
+  border-radius: 5px;
+}
+
+/* Dark Mode Adaptation */
+[data-theme="dark"] .profileSkeletonPic {
+  background-color: var(--skeleton-bg-dark);
+}
+
+[data-theme="dark"] .profileSkeletonName,
+[data-theme="dark"] .profileSkeletonEmail,
+[data-theme="dark"] .profileSkeletonRole,
+[data-theme="dark"] .profileSkeletonButton {
+  background-color: var(--skeleton-bg-dark);
+}

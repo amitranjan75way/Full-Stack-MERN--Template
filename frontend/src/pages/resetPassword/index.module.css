@@ -102,3 +102,76 @@
 .errorInput:focus {
   box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
 }
+
+/* reset password skeleton css */
+/* Reset Password skeleton */
+/* General Styles */
+.resetPasswordSkeletonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--background-color);
+}
+
+.resetPasswordSkeletonFormWrapper {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  background-color: var(--card-background);
+  border-radius: 10px;
+  transition: background-color 0.3s ease-in-out;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--card-shadow);
+}
+
+.resetPasswordSkeletonHeader {
+  width: 80%;
+  height: 2rem;
+  background-color: var(--skeleton-bg-light);
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.resetPasswordSkeletonSubHeader {
+  width: 60%;
+  height: 1rem;
+  background-color: var(--skeleton-bg-light);
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.resetPasswordSkeletonForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Skeleton Input Group */
+.resetPasswordSkeletonSkeletonInputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.resetPasswordSkeletonSkeletonInput {
+  width: 100%;
+  height: 2.5rem;
+  background-color: var(--skeleton-bg-light);
+  border-radius: 5px;
+}
+
+.resetPasswordSkeletonSkeletonButton {
+  width: 100%;
+  height: 2.5rem;
+  background-color: var(--skeleton-bg-light);
+  border-radius: 5px;
+}
+
+/* Dark Mode Adaptation */
+[data-theme="dark"] .resetPasswordSkeletonHeader,
+[data-theme="dark"] .resetPasswordSkeletonSubHeader,
+[data-theme="dark"] .resetPasswordSkeletonSkeletonInput,
+[data-theme="dark"] .resetPasswordSkeletonSkeletonButton {
+  background-color: var(--skeleton-bg-dark);
+}

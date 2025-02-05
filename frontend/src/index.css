@@ -17,6 +17,8 @@
   --border-color: #dddddd; /* Border color */
   --input-border: #cccccc; /* Input field border */
   --link-hover: #0056b3; /* Link hover color */
+  --skeleton-bg-light: #e0e0e0;
+  --skeleton-bg-dark: #333;
 }
 
 [data-theme="dark"] {
@@ -30,6 +32,8 @@
   --link-hover: #4ea8de; /* Link hover color */
   --card-background: #333333; /* Dark background for cards */
   --card-shadow: rgba(0, 0, 0, 0.7); /* Darker shadow for contrast */
+  --skeleton-bg-light: #444;
+  --skeleton-bg-dark: #555;
 }
 
 

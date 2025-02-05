@@ -174,3 +174,93 @@
   color: var(--secondary-color);
   text-decoration: underline;
 }
+
+/* Login form skeleton */
+/* General Styles */
+.loginFormSkeletonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--background-color);
+}
+
+.loginFormSkeletonFormWrapper {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  background-color: var(--card-background);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px var(--card-shadow);
+  border: 1px solid var(--border-color);
+}
+
+.loginFormSkeletonHeader {
+  width: 80%;
+  height: 2rem;
+  background-color: var(--skeleton-bg-light);
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.loginFormSkeletonSubHeader {
+  width: 60%;
+  height: 1rem;
+  background-color: var(--skeleton-bg-light);
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.loginFormSkeletonForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Skeleton Input Group */
+.loginFormSkeletonSkeletonInputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.loginFormSkeletonSkeletonInput {
+  width: 100%;
+  height: 2.5rem;
+  background-color: var(--skeleton-bg-light);
+  border-radius: 5px;
+}
+
+.loginFormSkeletonSkeletonButton {
+  width: 100%;
+  height: 2.5rem;
+  background-color: var(--skeleton-bg-light);
+  border-radius: 5px;
+}
+
+.loginFormSkeletonSkeletonForgotPassword {
+  width: 60%;
+  height: 1rem;
+  background-color: var(--skeleton-bg-light);
+  margin-top: 15px;
+  border-radius: 8px;
+}
+
+.loginFormSkeletonSkeletonRegisterLink {
+  width: 80%;
+  height: 1rem;
+  background-color: var(--skeleton-bg-light);
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+/* Dark Mode Adaptation */
+[data-theme="dark"] .loginFormSkeletonHeader,
+[data-theme="dark"] .loginFormSkeletonSubHeader,
+[data-theme="dark"] .loginFormSkeletonSkeletonInput,
+[data-theme="dark"] .loginFormSkeletonSkeletonButton,
+[data-theme="dark"] .loginFormSkeletonSkeletonForgotPassword,
+[data-theme="dark"] .loginFormSkeletonSkeletonRegisterLink {
+  background-color: var(--skeleton-bg-dark);
+}
+
