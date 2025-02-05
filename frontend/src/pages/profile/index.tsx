@@ -1,10 +1,10 @@
 import React from 'react';
 import style from './index.module.css';
 
-const Dashboard = () => {
+const Profile = () => {
   return (
     <div>index</div>
   )
 }
 
-export default Dashboard;
+export default Profile;

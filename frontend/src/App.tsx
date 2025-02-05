@@ -10,16 +10,13 @@ import Home from "./pages/home";
 import Register from './pages/register';
 import Login from './pages/login';
 import UpdatePassword from "./pages/updatePassword";
-import ErrorBoundary from "./components/ErrorBoundry";
 
 // importing components
 import PublicRoute from "./components/auth/PublicRoutes";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import NotFound from "./pages/notfound";
-import { ThemeContexProvider } from './context/ThemeContext';
 import ForgotPassword from "./pages/forgotPassword";
 import ResetPassword from "./pages/resetPassword";
-import Dashboard from "./pages/dashboard";
 import Layout from "./layouts/sidebar/Layout";
 
 
@@ -58,8 +55,7 @@ function App() {
           <Route path="/dashboard" element={<Layout/>}>
             <Route path="profile" element={<h1>This is profile</h1>} />
             <Route path="settings" element={<h1>This is setting</h1>} />
-            <Route path="notifications" element={<h1>This is notificatin</h1>} />
-            {/* Add more routes here */}
+            
           </Route>
 
         </Route>

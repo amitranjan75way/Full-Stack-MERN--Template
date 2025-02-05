@@ -9,7 +9,7 @@
   padding: 20px;
   box-shadow: 2px 0 5px var(--border-color);
   position: fixed;
-  top: 60px; /* Adjust for the header height */
+  top: 48px;
   left: 0;
 }
 

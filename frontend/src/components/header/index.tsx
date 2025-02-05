@@ -41,6 +41,14 @@ const Header = () => {
       console.log(error);
     }
   };
+  const handleDashboard = () => {
+    navigate('/dashboard/profile');
+    setShowDropdown(false);
+  }
+  const handleSetting = () => {
+    navigate('/setting');
+    setShowDropdown(false);
+  }
 
   return (
     <motion.header 
@@ -95,8 +103,8 @@ const Header = () => {
                 animate={{ opacity: 1, y: 0 }} 
                 transition={{ duration: 0.3 }}
               >
-                <button onClick={() => navigate('/dashboard')}>Dashboard</button>
-                <button onClick={() => navigate('/settings')}>Settings</button>
+                <button onClick={handleDashboard}>Dashboard</button>
+                <button onClick={handleSetting}>Settings</button>
                 <button onClick={handleLogout}>Logout</button>
               </motion.div>
             )}

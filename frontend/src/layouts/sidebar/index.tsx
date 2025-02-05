@@ -8,9 +8,7 @@ import style from './index.module.css';
 const sidebarItems = [
   { label: "Profile", path: "/dashboard/profile" },
   { label: "Settings", path: "/dashboard/settings" },
-  { label: "Notifications", path: "/dashboard/notifications" },
-  { label: "Messages", path: "/dashboard/messages" },
-  { label: "Security", path: "/dashboard/security" },
+  
 ];
 
 const Sidebar: React.FC = () => {
@@ -19,7 +17,7 @@ const Sidebar: React.FC = () => {
   return (
     <Drawer open={true} direction="left" style={{ width: '250px' }}>
       <div className={style.sidebarContainer}>
-        <h3 className={style.sidebarHeading}>Dashboard Sidebar</h3>
+        <h3 className={style.sidebarHeading}>Dashboard</h3>
         <ul className={style.sidebarList}>
           {sidebarItems.map((item) => (
             <li key={item.label} className={style.sidebarItem}>
