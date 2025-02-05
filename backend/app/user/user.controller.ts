@@ -255,6 +255,8 @@ export const forgotPasswordSendToken = asyncHandler(
     // Generate JWT for password reset, setting expiration time (e.g., 1 hour)
     const resetToken = await jwthelper.generatePasswordRestToken(user._id);
 
+    await userService.updateResetToken(user._id, resetToken);
+
     const resetLink = `${BASE_URL}/reset-password/${resetToken}`;
     const emailContent = resetPasswordEmailTemplate(resetLink);
 
@@ -291,7 +293,7 @@ export const resetPassword = asyncHandler(
     }
     
     
-    const user = await userService.updatePassword((decoded as any).userId, {newPassword: newPassword});
+    const user = await userService.resetPassword((decoded as any).userId, token, newPassword);
 
     res.send(createResponse(200, "Password reset successfully"));
   }

@@ -7,6 +7,7 @@ export interface IUser extends BaseSchema {
         role: "USER" | "ADMIN";
         password: string;
         refreshToken: string;
+        resetPasswordToken: string;
 }
 
 export interface Payload {

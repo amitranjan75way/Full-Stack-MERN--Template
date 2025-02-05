@@ -17,7 +17,8 @@ import PrivateRoute from "./components/auth/PrivateRoute";
 import NotFound from "./pages/notfound";
 import ForgotPassword from "./pages/forgotPassword";
 import ResetPassword from "./pages/resetPassword";
-import Layout from "./layouts/sidebar/Layout";
+import Layout from "./layouts/Dashboard/Sidebar";
+import Profile from "./pages/profile";
 
 
 function App() {
@@ -53,7 +54,7 @@ function App() {
           <Route path="/update-password" element={<UpdatePassword />} />
           
           <Route path="/dashboard" element={<Layout/>}>
-            <Route path="profile" element={<h1>This is profile</h1>} />
+            <Route path="profile" element={<Profile/>} />
             <Route path="settings" element={<h1>This is setting</h1>} />
             
           </Route>

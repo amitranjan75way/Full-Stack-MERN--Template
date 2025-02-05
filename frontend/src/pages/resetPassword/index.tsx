@@ -51,8 +51,12 @@ const ResetPassword: React.FC = () => {
       toast.success('Your password has been reset!');
       navigate('/login');
     } catch (err) {
-      console.log("error in reset pass: ", err);
-      toast.error('Failed to reset password');
+      if((err as any)?.data?.error_code === 401) {
+        toast.error("Link expired");
+      }
+      if((err as any)?.data?.error_code===500) {
+        toast.error('Failed to reset password');
+      }
     }
   };
 

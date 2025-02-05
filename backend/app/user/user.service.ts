@@ -2,6 +2,8 @@
 import { type IUser } from "./user.dto";
 import UserSchema from "./user.schema";
 import bcrypt from 'bcrypt';
+import * as jwthelper from '../common/helper/jwt.helper';
+import createHttpError from "http-errors";
 
 
 /**
@@ -100,5 +102,42 @@ export const updatePassword = async(userId: string, data: any) => {
      
     const user = await UserSchema.findByIdAndUpdate(userId, {password: hashedPass});
     return user as IUser;
+}
+
+/**
+ * Updates the reset password token for a user.
+ * 
+ * @param {string} userId - The ID of the user whose reset token is being updated.
+ * @param {string} token - The reset password token to be stored in the database.
+ * @returns {Promise<void>} A promise that resolves when the token is updated.
+ */
+export const updateResetToken = async(userId: string, token: string) => {
+    await UserSchema.findByIdAndUpdate(userId, {resetPasswordToken: token});
+}
+
+
+/**
+ * Resets the user's password if the provided token is valid.
+ * 
+ * @param {string} userId - The ID of the user who is resetting their password.
+ * @param {string} token - The reset password token provided by the user.
+ * @param {string} newPassword - The new password to be set for the user.
+ * @throws {HttpError} Throws an error if the reset token is invalid or expired.
+ * @returns {Promise<User | null>} A promise that resolves to the updated user document, or null if the user is not found.
+ */
+export const resetPassword = async(userId: string, token: string, newPassword: string) => {
+    const user = await UserSchema.findById(userId);
+    console.log(user);
+    if(!user?.resetPasswordToken) {
+        throw createHttpError(401, "Token expired or invalid");
+    }
+    const hashPass = await bcrypt.hash(newPassword, 12);
+    const newUser = await UserSchema.findByIdAndUpdate(userId, 
+        {
+            password: hashPass, resetPasswordToken: null
+        }, {new: true}
+    );
+
+    return newUser;
 }
 

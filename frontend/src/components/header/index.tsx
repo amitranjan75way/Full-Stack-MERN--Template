@@ -7,6 +7,8 @@ import { logout } from '../../store/reducers/authReducer';
 import { useLogoutUserMutation } from '../../services/userApi';
 import { ThemeContext } from '../../context/ThemeContext';
 import toast from 'react-hot-toast';
+import { MdLightMode } from "react-icons/md";
+import { MdDarkMode } from "react-icons/md";
 
 const Header = () => {
   const authData = useAppSelector((store) => store.auth);
@@ -78,7 +80,7 @@ const Header = () => {
           animate={{ scale: 1, opacity: 1 }} 
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          {theme === 'light' ? '🌙' : '☀️'}
+          {theme === 'light' ? <MdDarkMode /> : <MdLightMode style={{color: 'white'}} />}
         </motion.button>
 
         {/* Conditional Rendering for Authenticated Users */}

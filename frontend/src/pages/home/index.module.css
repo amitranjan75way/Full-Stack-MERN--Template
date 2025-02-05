@@ -1,0 +1,4 @@
+.maindiv {
+  min-height: 90vh;
+  background-color: var(--background-color);
+}
