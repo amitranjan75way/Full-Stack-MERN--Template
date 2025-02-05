@@ -1,0 +1,103 @@
+/* Profile Page Wrapper */
+.profilePage {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Profile Card */
+.profileCard {
+  background-color: var(--card-background);
+  color: var(--text-color);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px var(--card-shadow);
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Profile Picture */
+.profilePicContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.profilePic {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 2px solid var(--border-color);
+}
+
+/* Profile Information */
+.profileInfoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: center;
+}
+
+.profileInfoContainer h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.profileInfoContainer p {
+  margin: 0;
+}
+
+/* Role Text */
+.roleText {
+  color: var(--secondary-text-color);
+  font-size: 0.9rem;
+}
+
+/* Action Buttons */
+.profileActionsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.changePasswordButton {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  color: white;
+  border: 1px solid var(--primary-color);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.changePasswordButton:hover {
+  background-color: var(--link-hover);
+}
+
+.logoutButton {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: var(--secondary-color);
+  color: white;
+  border: 1px solid var(--secondary-color);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.logoutButton:hover {
+  background-color: var(--link-hover);
+}

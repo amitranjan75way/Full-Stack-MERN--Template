@@ -7,7 +7,7 @@ import Footer from "../components/footer";
 const useStyle = (theme: Theme) => createStyles({
   root: {
     backgroundColor: 'var(--background-color)',
-    height: '100vh',
+    // height: '100vh',
     width: '100vw',
     overflowX: 'hidden',
     [theme.breakpoints.up('md')]: {

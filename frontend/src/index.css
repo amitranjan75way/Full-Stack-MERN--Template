@@ -5,6 +5,8 @@
   box-sizing: border-box;
 }
 
+
+
 /* Global CSS with root variables for dark and light mode */
 :root {
   --background-color: #ffffff; /* Light mode background */
@@ -30,11 +32,16 @@
   --card-shadow: rgba(0, 0, 0, 0.7); /* Darker shadow for contrast */
 }
 
-/* Body styling */
-body {
+
+/* Full-page layout */
+html, body {
+  height: 100vh;
+  width: 100vw;
   background-color: var(--background-color);
   color: var(--text-color);
   font-family: Arial, sans-serif;
+  overflow-x: hidden; 
+  overflow-y: auto;
 }
 
 /* Links */

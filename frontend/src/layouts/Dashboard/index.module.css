@@ -1,57 +1,84 @@
-/* Sidebar Container */
-.sidebarContainer {
-  width: 250px;
-  height: 100vh;
-  background-color: var(--background-color);
-  color: var(--text-color);
+
+
+/* Dashboard Layout */
+.dashboard {
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  box-shadow: 2px 0 5px var(--border-color);
+  height: 100vh;
+}
+
+/* Fixed Header */
+.header {
   position: fixed;
-  top: 48px;
+  top: 0;
   left: 0;
+  width: 100%;
+  height: 72px;
+  background-color: var(--background-color);
+  box-shadow: 0px 2px 5px var(--border-color);
+  z-index: 1000;
 }
 
-/* Sidebar Heading */
-.sidebarHeading {
-  font-size: 1.4rem;
-  font-weight: bold;
-  margin-bottom: 20px;
-  text-align: center;
-  color: var(--text-color);
+/* Main Content Area */
+.mainContent {
+  display: flex;
+  margin-top: 72px; 
+  height: calc(100vh - 72px);
 }
 
-/* Sidebar List */
-.sidebarList {
-  list-style-type: none;
+/* Main Content (Expands) */
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  margin-left: 250px; /* Leave space for sidebar */
+}
+
+
+/* sidebar css */
+.drawer {
+  width: 250px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: var(--background-color);
+  padding: 10px;
+  overflow-y: auto;
+  padding-top: 72px;
+}
+
+.navList {
+  list-style: none;
   padding: 0;
 }
 
-/* Sidebar List Item */
-.sidebarItem {
-  margin: 10px 0;
+.navItem {
+  margin-bottom: 10px;
 }
 
-/* Sidebar Links */
-.sidebarLink {
-  color: var(--text-color);
-  font-size: 1.1rem;
-  text-decoration: none;
+.navLink {
   display: block;
   padding: 10px;
+  color: var(--text-color);
+  background-color: transparent;
   border-radius: 5px;
-  transition: background-color 0.3s ease;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Active Link */
-.activeLink {
-  background-color: var(--primary-color);
-  color: white;
+.navLink:hover {
+  color: var(--link-hover);
 }
 
-/* Hover Effect */
-.sidebarLink:hover {
-  background-color: var(--secondary-color);
-  color: white;
+.activeNavLink {
+  color: var(--primary-color);
+  background-color: var(--border-color);
 }
+
+
+

@@ -17,8 +17,9 @@ import PrivateRoute from "./components/auth/PrivateRoute";
 import NotFound from "./pages/notfound";
 import ForgotPassword from "./pages/forgotPassword";
 import ResetPassword from "./pages/resetPassword";
-import Layout from "./layouts/Dashboard/Sidebar";
 import Profile from "./pages/profile";
+import Dashboard from "./layouts/Dashboard";
+import Header from "./components/header";
 
 
 function App() {
@@ -52,20 +53,19 @@ function App() {
         {/* Private Routes */}
         <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
           <Route path="/update-password" element={<UpdatePassword />} />
-          
-          <Route path="/dashboard" element={<Layout/>}>
-            <Route path="profile" element={<Profile/>} />
-            <Route path="settings" element={<h1>This is setting</h1>} />
-            
-          </Route>
-
         </Route>
 
-
-        {/* Catch-All Route (404 Page) */}
-        <Route path="*" element={<NotFound />} />
-
       </Route>
+
+      <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
+        <Route path="/dashboard" element={<Dashboard />}>
+          <Route path="profile" element={<Profile />} />
+          <Route path="settings" element={<h1>This is setting</h1>} />
+        </Route>
+      </Route>
+
+      {/* Catch-All Route (404 Page) */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
 
   );
