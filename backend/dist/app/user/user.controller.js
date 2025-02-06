@@ -45,17 +45,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatePassword = exports.updateAccessToken = exports.logout = exports.loginUser = exports.registerUser = void 0;
+exports.resetPassword = exports.forgotPasswordSendToken = exports.updatePassword = exports.updateAccessToken = exports.logout = exports.loginUser = exports.registerUser = void 0;
 const userService = __importStar(require("./user.service"));
 const response_hepler_1 = require("../common/helper/response.hepler");
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const http_errors_1 = __importDefault(require("http-errors"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const email_service_1 = require("../common/services/email.service");
+const mail_template_1 = require("../common/template/mail.template");
 const jwthelper = __importStar(require("../common/helper/jwt.helper"));
 const config_hepler_1 = require("../common/helper/config.hepler");
 (0, config_hepler_1.loadConfig)();
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
+const BASE_URL = process.env.BASE_URL;
 /**
  * Registers a new user.
  * @param {Request} req - The request object containing user data in the body.
@@ -96,7 +99,7 @@ exports.registerUser = (0, express_async_handler_1.default)((req, res) => __awai
         email: user.email,
         role: user.role,
         refreshToken,
-        accessToken
+        accessToken,
     };
     res.send((0, response_hepler_1.createResponse)(response, "User Registered Successfully"));
 }));
@@ -140,7 +143,7 @@ exports.loginUser = (0, express_async_handler_1.default)((req, res) => __awaiter
             email: user.email,
             role: user.role,
             refreshToken,
-            accessToken
+            accessToken,
         };
         res.send((0, response_hepler_1.createResponse)(response, "User logged in successfully"));
     }
@@ -203,7 +206,7 @@ exports.updateAccessToken = (0, express_async_handler_1.default)((req, res) => _
         email: user.email,
         role: user.role,
         refreshToken,
-        accessToken
+        accessToken,
     };
     res.send((0, response_hepler_1.createResponse)(response, "Access token updated successfully"));
 }));
@@ -233,4 +236,50 @@ exports.updatePassword = (0, express_async_handler_1.default)((req, res) => __aw
         throw (0, http_errors_1.default)(401, "Incorrect old password, unauthorised access");
     }
     res.send((0, response_hepler_1.createResponse)(200, "Password updated successfully"));
+}));
+/**
+ * Generates a password reset token, sends a reset link to the user's email.
+ *
+ * @async
+ * @param {Request} req - The request object containing the user's email in the body.
+ * @param {Response} res - The response object to send the reset link and success message.
+ * @throws {HttpError} - Throws a 404 error if the user does not exist, or a 500 error if email sending fails.
+ * @returns {Promise<void>} - Resolves when the password reset link is sent successfully.
+ */
+exports.forgotPasswordSendToken = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email } = req.body;
+    const user = yield userService.getUserByEmail(email);
+    if (!user) {
+        throw (0, http_errors_1.default)(404, "User not exists");
+    }
+    // Generate JWT for password reset, setting expiration time (e.g., 1 hour)
+    const resetToken = yield jwthelper.generatePasswordRestToken(user._id);
+    yield userService.updateResetToken(user._id, resetToken);
+    const resetLink = `${BASE_URL}/reset-password/${resetToken}`;
+    const emailContent = (0, mail_template_1.resetPasswordEmailTemplate)(resetLink);
+    yield (0, email_service_1.sendEmail)({
+        to: email,
+        subject: "Password reset Link",
+        html: emailContent,
+    });
+    res.send((0, response_hepler_1.createResponse)(resetLink, "Reset password Link send successfully"));
+}));
+/**
+ * Verifies the password reset token and updates the user's password.
+ *
+ * @async
+ * @param {Request} req - The request object containing the reset token in the parameters and the new password in the body.
+ * @param {Response} res - The response object to send a success message after the password reset.
+ * @throws {HttpError} - Throws a 401 error if the token is invalid or expired.
+ * @returns {Promise<void>} - Resolves when the password is reset successfully.
+ */
+exports.resetPassword = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+    const { valid, decoded } = yield jwthelper.verifyResetPasswordToken(token);
+    if (!valid || !decoded) {
+        throw (0, http_errors_1.default)(401, "Link is expired or invalid...");
+    }
+    const user = yield userService.resetPassword(decoded.userId, token, newPassword);
+    res.send((0, response_hepler_1.createResponse)(200, "Password reset successfully"));
 }));

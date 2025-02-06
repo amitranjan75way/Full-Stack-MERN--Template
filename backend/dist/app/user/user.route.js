@@ -44,5 +44,7 @@ router
     .post('/update-access-token', cath_error_middleware_1.catchError, userController.updateAccessToken)
     .post('/login', userValidator.loginUser, cath_error_middleware_1.catchError, userController.loginUser)
     .post('/logout', authMiddlerware.auth, cath_error_middleware_1.catchError, userController.logout)
-    .patch('/update-password', authMiddlerware.auth, userValidator.updatePassword, userController.updatePassword);
+    .post('/send-password-reset-link', userValidator.forgotPassword, userController.forgotPasswordSendToken)
+    .post('/reset-password/:token', userValidator.resetPassword, cath_error_middleware_1.catchError, userController.resetPassword)
+    .patch('/update-password', authMiddlerware.auth, userValidator.updatePassword, cath_error_middleware_1.catchError, userController.updatePassword);
 exports.default = router;

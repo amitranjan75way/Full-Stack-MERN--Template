@@ -24,6 +24,13 @@ const transporter = nodemailer_1.default.createTransport({
         pass: process.env.MAIL_PASS,
     },
 });
+/**
+ * Sends an email using the configured transporter (Gmail service).
+ *
+ * @param {Mail.Options} mailOptions - The options for the email, including the recipient, subject, and content.
+ * @returns {Promise<any>} - A promise that resolves with the result of sending the email.
+ * @throws {HttpError} - Throws an HTTP error if sending the email fails.
+ */
 const sendEmail = (mailOptions) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         return yield transporter.sendMail(mailOptions);

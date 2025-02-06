@@ -1,28 +1,26 @@
-import React, { Route, Routes } from "react-router-dom";
-import { useEffect, useState, Suspense } from "react";
+import { Route, Routes } from "react-router-dom";
+import React, { useEffect, useState, Suspense } from "react";
 import { useAppSelector } from "./store/store";
 
 // importing layouts
 import Basic from "./layouts/Basic";
 
 // importing pages
-import Home from "./pages/home";
-import Register from './pages/register';
-import Login from './pages/login';
-import UpdatePassword from "./pages/updatePassword";
-
-// const Login = React.lazy(()=>import('./pages/login'));
+const Login = React.lazy(() => import('./pages/login'));
+const Home = React.lazy(() => import('./pages/home'));
+const Register = React.lazy(() => import('./pages/register'));
+const UpdatePassword = React.lazy(() => import('./pages/updatePassword'));
+const Profile = React.lazy(() => import('./pages/profile'));
+const ForgotPassword = React.lazy(() => import('./pages/forgotPassword'));
+const ResetPassword = React.lazy(() => import('./pages/resetPassword'));
+const NotFound = React.lazy(() => import('./pages/notfound'));
 
 // importing components
 import PublicRoute from "./components/auth/PublicRoutes";
 import PrivateRoute from "./components/auth/PrivateRoute";
-import NotFound from "./pages/notfound";
-import ResetPassword from "./pages/resetPassword";
-import Profile from "./pages/profile";
 import Dashboard from "./layouts/Dashboard";
-import ForgotPassword from "./pages/forgotPassword";
 
-// importing skeleton lodin pages
+// importing skeleton loding pages
 import ForgotPasswordSkeleton from "./pages/forgotPassword/ForgotPasswordSkeleton";
 import LoginFormSkeleton from "./pages/login/LoginSkeleton";
 import NotFoundSkeleton from "./pages/notfound/NotFoundSkeleton";
@@ -54,29 +52,57 @@ function App() {
 
         {/* Public Routes */}
         <Route element={<PublicRoute isAuthenticated={isAuthenticated} />} >
-          <Route path="/login" element={<Login/>} />
-          <Route path="/register" element={<Register/>} />
-          <Route path="/forgot-password" element={<ForgotPassword/>} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/login" element={
+            <Suspense fallback={<LoginFormSkeleton />}>
+              <Login />
+            </Suspense>
+          } />
+          <Route path="/register" element={
+            <Suspense fallback={<SignupFormSkeleton />} >
+              <Register />
+            </Suspense>
+          } />
+          <Route path="/forgot-password" element={
+            <Suspense fallback={<ForgotPasswordSkeleton />}>
+              <ForgotPassword />
+            </Suspense>
+          } />
+          <Route path="/reset-password/:token" element={
+            <Suspense fallback={<ResetPasswordSkeleton />}>
+              <ResetPassword />
+            </Suspense>
+          } />
         </Route>
 
 
         {/* Private Routes */}
         <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
-          <Route path="/update-password" element={<UpdatePassword />} />
+          <Route path="/update-password" element={
+            <Suspense fallback={<UpdatePasswordSkeleton />}>
+              <UpdatePassword />
+            </Suspense>
+          } />
         </Route>
 
       </Route>
 
       <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
         <Route path="/dashboard" element={<Dashboard />}>
-          <Route path="profile" element={<Profile />} />
+          <Route path="profile" element={
+            <Suspense fallback={<ProfileSkeleton />}>
+              <Profile />
+            </Suspense>
+          } />
           <Route path="settings" element={<h1>This is setting</h1>} />
         </Route>
       </Route>
 
       {/* Catch-All Route (404 Page) */}
-      <Route path="*" element={<NotFound />} />
+      <Route path="*" element={
+        <Suspense fallback={<NotFoundSkeleton />}>
+          <NotFound />
+        </Suspense>
+      } />
     </Routes>
 
   );

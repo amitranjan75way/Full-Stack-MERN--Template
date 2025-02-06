@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatePassword = exports.deleteRefreshToken = exports.getUserById = exports.updateRefreshToken = exports.getUserByEmail = exports.isUserExistByEamil = exports.createUser = void 0;
+exports.resetPassword = exports.updateResetToken = exports.updatePassword = exports.deleteRefreshToken = exports.getUserById = exports.updateRefreshToken = exports.getUserByEmail = exports.isUserExistByEamil = exports.createUser = void 0;
 const user_schema_1 = __importDefault(require("./user.schema"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const http_errors_1 = __importDefault(require("http-errors"));
 /**
  * Creates a new user.
  *
@@ -104,3 +105,36 @@ const updatePassword = (userId, data) => __awaiter(void 0, void 0, void 0, funct
     return user;
 });
 exports.updatePassword = updatePassword;
+/**
+ * Updates the reset password token for a user.
+ *
+ * @param {string} userId - The ID of the user whose reset token is being updated.
+ * @param {string} token - The reset password token to be stored in the database.
+ * @returns {Promise<void>} A promise that resolves when the token is updated.
+ */
+const updateResetToken = (userId, token) => __awaiter(void 0, void 0, void 0, function* () {
+    yield user_schema_1.default.findByIdAndUpdate(userId, { resetPasswordToken: token });
+});
+exports.updateResetToken = updateResetToken;
+/**
+ * Resets the user's password if the provided token is valid.
+ *
+ * @param {string} userId - The ID of the user who is resetting their password.
+ * @param {string} token - The reset password token provided by the user.
+ * @param {string} newPassword - The new password to be set for the user.
+ * @throws {HttpError} Throws an error if the reset token is invalid or expired.
+ * @returns {Promise<User | null>} A promise that resolves to the updated user document, or null if the user is not found.
+ */
+const resetPassword = (userId, token, newPassword) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_schema_1.default.findById(userId);
+    console.log(user);
+    if (!(user === null || user === void 0 ? void 0 : user.resetPasswordToken)) {
+        throw (0, http_errors_1.default)(401, "Token expired or invalid");
+    }
+    const hashPass = yield bcrypt_1.default.hash(newPassword, 12);
+    const newUser = yield user_schema_1.default.findByIdAndUpdate(userId, {
+        password: hashPass, resetPasswordToken: null
+    }, { new: true });
+    return newUser;
+});
+exports.resetPassword = resetPassword;
